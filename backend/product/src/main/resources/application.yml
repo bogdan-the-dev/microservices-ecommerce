@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      username: bogdan
+      password: password
+      database: product_database
+      port: 27017
+      host: localhost
+      auto-index-creation: true
+
+  application:
+    name: product
