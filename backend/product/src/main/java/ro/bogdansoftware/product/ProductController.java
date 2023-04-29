@@ -3,13 +3,14 @@ package ro.bogdansoftware.product;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.bogdansoftware.product.dto.CreateCategoryRequestDTO;
+import ro.bogdansoftware.product.dto.AssignProductToCategoryRequestDTO;
 import ro.bogdansoftware.product.dto.CreateProductRequestDTO;
-import ro.bogdansoftware.product.model.Category;
+import ro.bogdansoftware.product.dto.ProductResponseDTO;
 import ro.bogdansoftware.product.model.Product;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -32,18 +33,20 @@ public class ProductController {
     }
 
     @GetMapping(value = "get-all")
-    public ResponseEntity<List<Product>> getAll() {
-        return ResponseEntity.ok(this.productService.getAll());
+    public ResponseEntity<List<ProductResponseDTO>> getAll() {
+        return ResponseEntity.ok(this.productService.getAll().stream().map(ProductResponseDTO::convert).collect(Collectors.toList()));
     }
 
-    @PostMapping(value = "add-category")
-    public ResponseEntity<Void> createCategory(@RequestBody CreateCategoryRequestDTO requestDTO) {
-        this.productService.addCategory(requestDTO);
-        return ResponseEntity.created(URI.create("")).build();
+    @GetMapping(value = "get-by-category")
+    public ResponseEntity<List<ProductResponseDTO>> getByCategory(@RequestBody String categoryName) {
+        return null;
     }
 
-    @GetMapping(value = "all-categories")
-    public ResponseEntity<List<Category>> getCategories() {
-        return ResponseEntity.ok(this.productService.getCategories());
+    @PutMapping(value = "assign-product-to-category")
+    public ResponseEntity<Void> assignProductToCategory(@RequestBody AssignProductToCategoryRequestDTO requestDTO) {
+        this.productService.assignProductToCategory(requestDTO);
+        return ResponseEntity.noContent().build();
     }
+
+
 }
