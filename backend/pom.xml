@@ -13,6 +13,8 @@
   <url>http://www.bogdansoftware.ro</url>
   <modules>
     <module>product</module>
+    <module>category</module>
+    <module>eureka-server</module>
   </modules>
 
 
@@ -21,17 +23,25 @@
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <spring.boot.maven.plugin.version>3.0.5</spring.boot.maven.plugin.version>
-    <spring.boot.dependecies.version>3.0.5</spring.boot.dependecies.version>
+    <spring.boot.dependencies.version>3.0.5</spring.boot.dependencies.version>
+    <spring-cloud.version>2022.0.2</spring-cloud.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
+    <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring.boot.dependecies.version}</version>
+        <version>${spring.boot.dependencies.version}</version>
         <scope>import</scope>
         <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
