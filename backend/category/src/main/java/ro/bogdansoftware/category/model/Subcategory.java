@@ -1,4 +1,4 @@
-package ro.bogdansoftware.product.model;
+package ro.bogdansoftware.category.model;
 
 import java.util.List;
 

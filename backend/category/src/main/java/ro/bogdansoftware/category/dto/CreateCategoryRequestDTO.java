@@ -1,4 +1,4 @@
-package ro.bogdansoftware.product.dto;
+package ro.bogdansoftware.category.dto;
 
 public record CreateCategoryRequestDTO(
         String name) {
