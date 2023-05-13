@@ -10,8 +10,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController(value = "/api/v1/category")
+@RestController
 @Slf4j
+@RequestMapping("api/v1/category")
 public class CategoryController {
 
         private final CategoryService service;

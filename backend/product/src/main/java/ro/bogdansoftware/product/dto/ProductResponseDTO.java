@@ -16,7 +16,14 @@ public record ProductResponseDTO(
 
     public static ProductResponseDTO convert(Product p) {
         return new ProductResponseDTO(p.getId(), p.getName(), p.getDescription(), p.getVariations());
+    }
 
-
+    public static Product convert(ProductResponseDTO responseDTO) {
+        return Product
+                .builder()
+                .id(responseDTO.id)
+                .description(responseDTO.description)
+                .variations(responseDTO.variations)
+                .build();
     }
 }

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.bogdansoftware.product.dto.AssignProductToCategoryRequestDTO;
+import ro.bogdansoftware.product.dto.AssignProductToSubcategoryRequestDTO;
 import ro.bogdansoftware.product.dto.CreateProductRequestDTO;
 import ro.bogdansoftware.product.dto.ProductResponseDTO;
 import ro.bogdansoftware.product.model.Product;
@@ -48,5 +49,12 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping(value = "assign-product-to-subcategory")
+    public ResponseEntity<Void> assignProductToSubcategory(@RequestBody AssignProductToSubcategoryRequestDTO requestDTO) {
+
+
+
+        return ResponseEntity.noContent().build();
+    }
 
 }

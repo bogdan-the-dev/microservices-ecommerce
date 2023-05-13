@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import ro.bogdansoftware.product.dto.AssignProductToCategoryRequestDTO;
+import ro.bogdansoftware.product.dto.AssignProductToSubcategoryRequestDTO;
 import ro.bogdansoftware.product.dto.CreateProductRequestDTO;
+import ro.bogdansoftware.product.dto.ProductResponseDTO;
 import ro.bogdansoftware.product.model.Product;
 
 import java.util.ArrayList;
@@ -54,7 +56,23 @@ public class ProductService {
 
     public void assignProductToCategory(AssignProductToCategoryRequestDTO requestDTO) throws RuntimeException {
         var product = this.productRepository.findById(requestDTO.categoryId()).orElseThrow();
+        //TODO verify if category exists
+
         product.setCategoryId(requestDTO.categoryId());
         this.productRepository.save(product);
     }
+
+    public void assignProductToSubcategory(AssignProductToSubcategoryRequestDTO requestDTO) {
+        var product = this.productRepository.findById(requestDTO.productId()).orElseThrow();
+        //TODO verify if subcategory exists
+
+        product.setSubcategoryId(requestDTO.subcategoryId());
+        this.productRepository.save(product);
+    }
+
+    public void editProduct(ProductResponseDTO requestDTO) {
+        var product = this.productRepository.findById(requestDTO.id()).orElseThrow();
+
+    }
+
 }
