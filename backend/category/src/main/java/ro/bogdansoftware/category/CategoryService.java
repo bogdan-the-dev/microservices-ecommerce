@@ -22,7 +22,7 @@ public class CategoryService {
     }
 
     public Category getCategory(String id) throws RuntimeException{
-        return this.repository.findById(id).orElseThrow(() -> {return new RuntimeException("Category with id " + id + " was not found");});
+        return this.repository.findById(id).orElseThrow(() -> new RuntimeException("Category with id " + id + " was not found"));
     }
 
     public void deleteCategory(String categoryId) {
@@ -39,7 +39,7 @@ public class CategoryService {
 
     public String getCategoryIdFromName(String name) {
         var categoryOptional = this.repository.getCategoryByNameIs(name);
-        return  categoryOptional.isPresent() ? categoryOptional.get().getName() : "";
+        return  categoryOptional.isPresent() ? categoryOptional.get().getId() : "";
     }
 
 }

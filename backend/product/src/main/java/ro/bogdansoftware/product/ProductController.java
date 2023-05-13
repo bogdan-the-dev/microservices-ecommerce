@@ -7,7 +7,6 @@ import ro.bogdansoftware.product.dto.AssignProductToCategoryRequestDTO;
 import ro.bogdansoftware.product.dto.AssignProductToSubcategoryRequestDTO;
 import ro.bogdansoftware.product.dto.CreateProductRequestDTO;
 import ro.bogdansoftware.product.dto.ProductResponseDTO;
-import ro.bogdansoftware.product.model.Product;
 
 import java.net.URI;
 import java.util.List;
@@ -39,8 +38,8 @@ public class ProductController {
     }
 
     @GetMapping(value = "get-by-category")
-    public ResponseEntity<List<ProductResponseDTO>> getByCategory(@RequestBody String categoryName) {
-        return null;
+    public ResponseEntity<List<ProductResponseDTO>> getByCategory(@RequestParam String name) {
+        return ResponseEntity.ok(this.productService.getProductsByCategoryName(name).stream().map(ProductResponseDTO::convert).toList());
     }
 
     @PutMapping(value = "assign-product-to-category")

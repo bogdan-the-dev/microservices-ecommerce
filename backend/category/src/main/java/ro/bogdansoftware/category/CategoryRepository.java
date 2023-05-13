@@ -4,7 +4,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import ro.bogdansoftware.category.model.Category;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

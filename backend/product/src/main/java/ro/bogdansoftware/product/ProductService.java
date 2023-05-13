@@ -1,9 +1,12 @@
 package ro.bogdansoftware.product;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.reactive.function.client.WebClient;
+import ro.bogdansoftware.clients.category.CategoryClient;
 import ro.bogdansoftware.product.dto.AssignProductToCategoryRequestDTO;
 import ro.bogdansoftware.product.dto.AssignProductToSubcategoryRequestDTO;
 import ro.bogdansoftware.product.dto.CreateProductRequestDTO;
@@ -11,7 +14,6 @@ import ro.bogdansoftware.product.dto.ProductResponseDTO;
 import ro.bogdansoftware.product.model.Product;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,10 +22,10 @@ import java.util.UUID;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final WebClient.Builder webClientBuilder;
-    public ProductService(ProductRepository productRepository, WebClient.Builder builder) {
+    private final CategoryClient categoryClient;
+    public ProductService(ProductRepository productRepository, CategoryClient categoryClient) {
         this.productRepository = productRepository;
-        this.webClientBuilder = builder;
+        this.categoryClient = categoryClient;
     }
 
     public void addProduct(CreateProductRequestDTO productRequestDTO) {
@@ -43,13 +45,19 @@ public class ProductService {
     }
 
     public List<Product> getProductsByCategoryName(String categoryName) {
-        String categoryId = webClientBuilder
-                .build()
-                .get()
-                .uri("http://CATEGORY/category/get-category-name?name=" + categoryName)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+//        String categoryId = webClientBuilder
+//                .build()
+//                .get()
+//                .uri("http://CATEGORY/api/v1/category/get-category-id?name=" + categoryName)
+//                .retrieve()
+//                .bodyToMono(String.class)
+//                .block();
+
+        var response = categoryClient.getCategoryId(categoryName);
+        String categoryId = "";
+        if (response.getStatusCode() == HttpStatus.OK) {
+            categoryId = response.getBody();
+        }
 
         return this.productRepository.findAllByCategoryIdIs(categoryId).orElse(new ArrayList<>());
     }
