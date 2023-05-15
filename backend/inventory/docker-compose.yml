@@ -1,0 +1,8 @@
+services:
+  redis:
+    image: redis
+    container_name: redis-inventory
+    volumes:
+      - ./data:/data
+    ports:
+      - 6380:6379

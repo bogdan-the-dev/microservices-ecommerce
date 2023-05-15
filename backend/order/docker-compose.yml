@@ -1,0 +1,13 @@
+
+services:
+  postgresql:
+    container_name: postgres
+    image: postgres:15.0-alpine
+    environment:
+      - POSTGRES_USER=bogdan
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=Order
+    ports:
+      - 5433:5432
+    expose:
+      - 5433

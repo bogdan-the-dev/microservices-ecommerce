@@ -22,6 +22,7 @@ public class Product {
     private String image;
     private List<Variation> variations;
     private Promotion promotion;
+    private boolean isInventoryEmpty;
 
 
 

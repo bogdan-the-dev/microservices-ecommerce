@@ -17,6 +17,9 @@
     <module>eureka-server</module>
       <module>clients</module>
     <module>notification</module>
+      <module>amqp</module>
+      <module>order</module>
+      <module>inventory</module>
   </modules>
 
 

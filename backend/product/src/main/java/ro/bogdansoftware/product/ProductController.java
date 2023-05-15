@@ -8,7 +8,9 @@ import ro.bogdansoftware.product.dto.AssignProductToSubcategoryRequestDTO;
 import ro.bogdansoftware.product.dto.CreateProductRequestDTO;
 import ro.bogdansoftware.product.dto.ProductResponseDTO;
 
+import java.math.BigDecimal;
 import java.net.URI;
+import java.util.Dictionary;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,4 +58,14 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("get-products-prices")
+    public ResponseEntity<Dictionary<String, BigDecimal>> getProductsPrices(List<String> productsIds) {
+        return ResponseEntity.ok(this.productService.getProductsPrices(productsIds));
+    }
+
+    @PutMapping("change-inventory-status")
+    public ResponseEntity<Void> changeInventoryStatus(@RequestParam("id") String id, @RequestParam("status") boolean status) {
+        productService.changeInventoryStatus(id, status);
+        return ResponseEntity.noContent().build();
+    }
 }

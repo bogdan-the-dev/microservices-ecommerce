@@ -38,6 +38,7 @@ public class CategoryService {
     }
 
     public String getCategoryIdFromName(String name) {
+        log.info("Get category id for name " + name);
         var categoryOptional = this.repository.getCategoryByNameIs(name);
         return  categoryOptional.isPresent() ? categoryOptional.get().getId() : "";
     }

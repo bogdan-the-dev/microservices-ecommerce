@@ -1,31 +1,31 @@
 package ro.bogdansoftware.product;
 
-import lombok.extern.slf4j.Slf4j;
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.reactive.function.client.WebClient;
-import ro.bogdansoftware.clients.category.CategoryClient;
+import ro.bogdansoftware.clients.category.ICategoryClient;
 import ro.bogdansoftware.product.dto.AssignProductToCategoryRequestDTO;
 import ro.bogdansoftware.product.dto.AssignProductToSubcategoryRequestDTO;
 import ro.bogdansoftware.product.dto.CreateProductRequestDTO;
 import ro.bogdansoftware.product.dto.ProductResponseDTO;
 import ro.bogdansoftware.product.model.Product;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.util.*;
 
 
-@Slf4j
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final CategoryClient categoryClient;
-    public ProductService(ProductRepository productRepository, CategoryClient categoryClient) {
+    private final ICategoryClient ICategoryClient;
+
+    private final static Log log = LogFactory.getLog(ProductService.class);
+
+
+    public ProductService(ProductRepository productRepository, ICategoryClient ICategoryClient) {
         this.productRepository = productRepository;
-        this.categoryClient = categoryClient;
+        this.ICategoryClient = ICategoryClient;
     }
 
     public void addProduct(CreateProductRequestDTO productRequestDTO) {
@@ -52,10 +52,11 @@ public class ProductService {
 //                .retrieve()
 //                .bodyToMono(String.class)
 //                .block();
-
-        var response = categoryClient.getCategoryId(categoryName);
+        log.info("Send request to find the category id for: " + categoryName);
+        var response = ICategoryClient.getCategoryId(categoryName);
         String categoryId = "";
         if (response.getStatusCode() == HttpStatus.OK) {
+            log.info("Category id fond");
             categoryId = response.getBody();
         }
 
@@ -83,4 +84,23 @@ public class ProductService {
 
     }
 
+    public void changeInventoryStatus(String id, boolean status) {
+        Optional<Product> opt = productRepository.findById(id);
+        if(opt.isEmpty()) {
+            log.error(String.format("Product with id [%s] was not found in the product database", id));
+            return;
+        }
+        Product p = opt.get();
+        p.setInventoryEmpty(status);
+        productRepository.save(p);
+    }
+
+    public Dictionary<String, BigDecimal> getProductsPrices(List<String> ids) {
+        Dictionary<String, BigDecimal> prices = new Hashtable<>();
+        for(String productId: ids) {
+            Optional<Product> o = productRepository.findById(productId);
+            o.ifPresent(product -> prices.put(productId, product.getPrice()));
+        }
+        return prices;
+    }
 }
