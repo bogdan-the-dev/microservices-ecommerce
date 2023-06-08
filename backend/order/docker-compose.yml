@@ -1,7 +1,7 @@
 
 services:
   postgresql:
-    container_name: postgres
+    container_name: postgres-order
     image: postgres:15.0-alpine
     environment:
       - POSTGRES_USER=bogdan

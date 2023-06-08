@@ -1,0 +1,13 @@
+
+services:
+  postgresql:
+    container_name: postgres_security
+    image: postgres:15.0-alpine
+    environment:
+      - POSTGRES_USER=bogdan
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=Security
+    ports:
+      - 5434:5432
+    expose:
+      - 5434

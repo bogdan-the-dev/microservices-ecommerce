@@ -3,10 +3,12 @@ package ro.bogdansoftware.order;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ro.bogdansoftware.clients.order.PlaceOrderDTO;
+import ro.bogdansoftware.security.VerifyRole;
 
 import java.net.URI;
 
@@ -21,5 +23,11 @@ public class OrderController {
     public ResponseEntity<Void> placeOrder(PlaceOrderDTO orderDTO) {
         this.orderService.placeOrder(orderDTO);
         return ResponseEntity.created(URI.create("")).build();
+    }
+
+    @GetMapping("/test")
+    @VerifyRole("admin")
+    public ResponseEntity<Void> test() {
+        return ResponseEntity.ok().build();
     }
 }
