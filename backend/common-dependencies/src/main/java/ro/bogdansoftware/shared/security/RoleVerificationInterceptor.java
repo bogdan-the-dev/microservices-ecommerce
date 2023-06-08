@@ -1,4 +1,4 @@
-package ro.bogdansoftware.security;
+package ro.bogdansoftware.shared.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

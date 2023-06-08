@@ -2,10 +2,8 @@ package ro.bogdansoftware.security.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -61,4 +59,13 @@ public enum UserRole {
         throw new IllegalArgumentException("Invalid list of authorities");
     }
 
+    public static UserRole getUSerRole(String role) {
+        String roleString = role.substring(5);
+        for(UserRole r: UserRole.values()) {
+            if(r.name().equals(roleString)) {
+                return r;
+            }
+        }
+        throw new IllegalArgumentException("Invalid role name provided");
+    }
 }

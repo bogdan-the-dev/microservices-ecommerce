@@ -33,8 +33,10 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(antMatcher("/")).permitAll();
+                    req.requestMatchers(antMatcher("/api/v1/auth/**")).permitAll();
+                    req.anyRequest().authenticated();
                 })
+/*
                 .authorizeHttpRequests()
                 .requestMatchers(antMatcher("/")).permitAll()
                 .requestMatchers(antMatcher("/error")).permitAll()
@@ -42,6 +44,7 @@ public class SecurityConfiguration {
                 .anyRequest().permitAll()
                 //.requestMatchers("**").permitAll()
                 .and()
+*/
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

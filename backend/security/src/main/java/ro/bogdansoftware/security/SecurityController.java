@@ -9,14 +9,15 @@ import ro.bogdansoftware.security.dto.AuthenticationRequestDTO;
 import ro.bogdansoftware.security.dto.AuthenticationResponseDTO;
 import ro.bogdansoftware.security.dto.RegisterRequestDTO;
 import ro.bogdansoftware.security.dto.ResetPasswordRequestDTO;
+import ro.bogdansoftware.shared.security.SecurityURLS;
 
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping(SecurityURLS.SECURITY_BASE)
 @AllArgsConstructor
 public class SecurityController {
     private final SecurityService service;
 
-    @PostMapping(value = "register")
+    @PostMapping(value = "auth/register")
     private ResponseEntity<Boolean> register(@RequestBody RegisterRequestDTO requestDTO) {
         try {
             return ResponseEntity.ok(service.register(requestDTO));
@@ -25,29 +26,29 @@ public class SecurityController {
         }
     }
 
-    @PostMapping(value = "authenticate")
-    private ResponseEntity<AuthenticationResponseDTO> register(@RequestBody AuthenticationRequestDTO authenticationDTO) {
+    @PostMapping(value = "auth/authenticate")
+    private ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody AuthenticationRequestDTO authenticationDTO) {
         return ResponseEntity.ok(service.authenticate(authenticationDTO));
     }
 
-    @GetMapping(value = "verify-account")
+    @GetMapping(value = "auth/verify-account")
     private ResponseEntity<Boolean> activateAccount(@RequestParam(name = "token") String token) {
         return ResponseEntity.ok(service.verifyAccount(token));
     }
 
-    @GetMapping(value = "resend-account-verification-code")
+    @GetMapping(value = "auth/resend-account-verification-code")
     private ResponseEntity<Void> resendAccountVerificationCode(@RequestParam(name = "email")String email) {
         service.resendVerificationCode(email);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "send-reset-code")
+    @GetMapping(value = "auth/send-reset-code")
     private ResponseEntity<Void> sendResetCode(@RequestParam(name ="email")String email) {
         service.sendResetPasswordToken(email);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "reset-password")
+    @PutMapping(value = "auth/reset-password")
     private ResponseEntity<Boolean> resetPassword(
             @RequestParam(name = "token") String token,
             @RequestBody ResetPasswordRequestDTO requestDTO
@@ -55,10 +56,11 @@ public class SecurityController {
         return ResponseEntity.ok(service.resetPassword(token, requestDTO.password()));
     }
 
-    @GetMapping(value = "authorize")
-    private ResponseEntity<Void> authorize(HttpServletRequest request, HttpServletResponse response) {
-        var role = service.getRole(request.getHeader("Authorization").substring(7));
-        response.setHeader("auth-user-role", role);
-        return ResponseEntity.ok().build();
+    @GetMapping(value = SecurityURLS.AUTHORIZE)
+    public ResponseEntity<String> authorize(@RequestParam(value = "token")String token) {
+        var role = service.getRole(token.substring(7));
+        return ResponseEntity.ok(role);
+        /*response.setHeader("auth-user-role", role);
+        return ResponseEntity.ok().build();*/
     }
 }

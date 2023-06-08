@@ -125,7 +125,7 @@ public class SecurityService {
     public String getRole(String jwtToken) {
         var email = jwtService.extractEmail(jwtToken);
         var authorities = detailsService.loadUserByUsername(email).getAuthorities();
-        UserRole role = UserRole.getUserRoleFromAuthorities((List<SimpleGrantedAuthority>) authorities);
+        UserRole role = UserRole.getUSerRole(String.valueOf(authorities.stream().toList().get(0)));
         return role.name();
     }
 

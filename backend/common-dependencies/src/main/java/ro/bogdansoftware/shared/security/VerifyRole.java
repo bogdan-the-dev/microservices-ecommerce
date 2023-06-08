@@ -1,4 +1,4 @@
-package ro.bogdansoftware.security;
+package ro.bogdansoftware.shared.security;
 
 
 import java.lang.annotation.ElementType;
