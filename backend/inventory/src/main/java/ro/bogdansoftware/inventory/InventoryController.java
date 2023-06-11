@@ -3,9 +3,9 @@ package ro.bogdansoftware.inventory;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ro.bogdansoftware.clients.inventory.ListOfInventoryItemsDTO;
 
-import java.util.Dictionary;
-import java.util.Map;
+import java.net.URI;
 
 @RestController
 @AllArgsConstructor
@@ -20,23 +20,32 @@ public class InventoryController {
     }
 
     @PutMapping("order-modify-inventory")
-    public ResponseEntity<Boolean> orderModifyInventory(Map<String, Integer> orderItems) {
-        return ResponseEntity.ok(inventoryService.orderModifyInventory(orderItems));
+    public ResponseEntity<Boolean> orderModifyInventory(@RequestBody ListOfInventoryItemsDTO requestDTO) {
+        return ResponseEntity.ok(inventoryService.orderModifyInventory(requestDTO.orderItems()));
     }
 
-    @PostMapping("modify-inventory")
+    @PutMapping("modify-inventory")
     public ResponseEntity<Void> modifyInventory(@RequestParam("id") String id, @RequestParam("qty") int quantity) {
         inventoryService.modifyInventory(id, quantity);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("increment-inventory")
-    public ResponseEntity<Void> incrementInventory(String id, int quantity) {
-        boolean status = inventoryService.incrementInventory(id, quantity);
-        if (status)
-            return ResponseEntity.ok().build();
-        else
-            return ResponseEntity.badRequest().build();
+    @PostMapping("create-inventory")
+    public ResponseEntity<Void> createInventory(@RequestBody InventoryDTO inventoryDTO) {
+        inventoryService.createInventory(inventoryDTO);
+        return ResponseEntity.created(URI.create("")).build();
+    }
+
+    @DeleteMapping("delete-inventory")
+    public ResponseEntity<Void> deleteInventory(@RequestParam(value = "id") String id) {
+        inventoryService.deleteInventory(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("get-all")
+    public ResponseEntity<Void> getAll(@RequestParam(value = "page") int pageNr) {
+        inventoryService.getAllInventory(pageNr);
+        return ResponseEntity.ok().build();
     }
 
 }

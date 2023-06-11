@@ -1,58 +1,60 @@
 package ro.bogdansoftware.inventory;
 
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
+import ro.bogdansoftware.clients.inventory.ListOfInventoryItemsDTO;
 
 import java.math.BigDecimal;
-import java.util.Dictionary;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class InventoryService {
 
-    private final IInventoryRepository repository;
     private final RedisTemplate<String, Integer> redisTemplate;
     private final static Log log = LogFactory.getLog(InventoryService.class);
 
-    public int getAvailableQuantity(String id) {
-        Optional<Inventory> opt = repository.findById(id);
-        if (opt.isEmpty()) {
+    private final static int PAGE_SIZE = 20;
+
+    public Integer getAvailableQuantity(String id) {
+        var res = redisTemplate.opsForHash().get("Inventory", id);
+        if(res == null)
+        {
             log.warn("Product's id was not found in the inventory");
+            return -1;
         }
-        else {
-            return opt.get().remainingQuantity;
-        }
-        return -1;
+        return (Integer)res;
     }
 
-    public boolean incrementInventory(String id, int quantity) {
-        Optional<Inventory> opt = repository.findById(id);
-        if(opt.isEmpty()) {
-            log.warn(String.format("Inventory with id [%s] doesn't exist", id));
-            return false;
-        }
-        Inventory i = opt.get();
-        i.remainingQuantity += quantity;
-        repository.save(i);
-        return true;
+    public void createInventory(InventoryDTO dto) {
+        Inventory inventory = Inventory.builder()
+                .productID(dto.productId())
+                .remainingQuantity(dto.quantity())
+                .build();
+        redisTemplate.opsForHash().put("Inventory",inventory.productID, inventory.remainingQuantity);
     }
+
 
     public void modifyInventory(String id, int quantity) {
-        log.info(String.format("Inventory for product with id [%s] was changed to [%d]", id, quantity));
-        Inventory i = repository.findById(id).orElse(Inventory.builder().productID(id).build());
-        if(i.remainingQuantity == 0) {
+        if(quantity == 0) {
             //todo send notification to disable product
+            //todo send notification to department that stock is empty
         }
-        i.remainingQuantity = quantity;
-        repository.save(i);
+        redisTemplate.execute(new SessionCallback<Object>() {
+            @Override
+            public <K, V> Object execute(RedisOperations<K, V> operations) throws DataAccessException {
+                operations.multi();
+                operations.opsForHash().put((K)"Inventory", id, quantity);
+                operations.exec();
+                return null;
+            }
+        });
     }
 
     public boolean orderModifyInventory(Map<String, Integer> orderItems) {
@@ -60,12 +62,33 @@ public class InventoryService {
             redisTemplate.execute(new SessionCallback<Object>() {
                 @Override
                 public <K, V> Object execute(RedisOperations<K, V> operations) throws DataAccessException {
-                    operations.multi();
+
+                    operations.watch((K) "Inventory");
+                    List<Integer> qty = new ArrayList<>(orderItems.size());
                     for (Map.Entry<String, Integer> item : orderItems.entrySet()) {
-                        long newQuantity = operations.opsForHash().increment((K) "Inventory", item.getKey(), -item.getValue());
-                        if (newQuantity < 0) {
+                        if(operations.opsForHash().get((K) "Inventory", item.getKey()) == null) {
+                            throw new RuntimeException("Invalid inventory id: " + item.getKey());
+                        }
+                        qty.add((Integer) operations.opsForHash().get((K) "Inventory", item.getKey()) - item.getValue());
+                    }
+
+                    operations.multi();
+
+                    //HashOperations<String, String, Integer> hashOperations = operations.opsForHash();
+                    int index = 0;
+                    for (String itemId : orderItems.keySet()) {
+                        var localQty = qty.get(index);
+                        if(localQty == 0) {
+                            //todo send notification to disable product
+                            //todo send notification to department that stock is empty
+                        }
+                        if (localQty < 0) {
                             operations.discard();
                             throw new RuntimeException("Ordered quantity greater than available stock");
+                        }
+                        else {
+                            operations.opsForHash().put((K) "Inventory", itemId, qty.get(index));
+                            index++;
                         }
                     }
                     operations.exec();
@@ -79,4 +102,14 @@ public class InventoryService {
         }
         return true;
     }
+
+    public void deleteInventory(String id) {
+        redisTemplate.opsForHash().delete("Inventory", id);
+    }
+
+    public ListOfInventoryItemsDTO getAllInventory(int pageNr) {
+        LinkedHashMap<String, Integer> items = new LinkedHashMap<>();
+        throw new NotImplementedException("get all inventory");
+    }
+
 }
