@@ -8,12 +8,19 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ro.bogdansoftware.security.JwtAuthenticationFilter;
 import ro.bogdansoftware.security.JwtService;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -45,6 +52,14 @@ public class SecurityConfiguration {
                 //.requestMatchers("**").permitAll()
                 .and()
 */
+                .cors().configurationSource(request -> {
+                    var cors = new CorsConfiguration();
+                    cors.setAllowedOrigins(List.of("https://localhost:4200", "https://127.0.0.1:80", "http://localhost:4200"));
+                    cors.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+                    cors.setAllowedHeaders(List.of("*"));
+                    cors.setAllowCredentials(true);
+                    return cors;
+                }).and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -54,4 +69,17 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(List.of("https://localhost:4200", "http://localhost:4200/", "**"));
+//        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS", "HEAD", "CONNECT", "TRACE"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        configuration.setAllowCredentials(true);
+//        return source;
+//    }
+
 }
+

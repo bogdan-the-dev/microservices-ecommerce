@@ -2,6 +2,7 @@ package ro.bogdansoftware.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ro.bogdansoftware.security.exception.AccountCreationException;
 import ro.bogdansoftware.security.model.ApplicationUser;
 
 import java.sql.Date;
@@ -38,7 +39,7 @@ public class TokenService {
     public boolean verifyToken(TokenType type, String token) {
         var optionalToken = tokenRepository.findValidToken(type, token);
         if(optionalToken.isEmpty()) {
-            return false;
+            throw new AccountCreationException("Token expired");
         }
         var dbToken = optionalToken.get();
         dbToken.setUsed(true);

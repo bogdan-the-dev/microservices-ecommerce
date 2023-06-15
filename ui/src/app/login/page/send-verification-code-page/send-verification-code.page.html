@@ -1,0 +1,16 @@
+<div class="container w-50 main-container">
+  <div class="form-container">
+    <h3>Send verification code</h3>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div>
+        <mat-form-field class="full">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email">
+          <mat-error></mat-error>
+        </mat-form-field>
+      </div>
+      <button mat-stroked-button class="full submit-button" [disabled]="form.invalid">Send reset link</button>
+    </form>
+  </div>
+  <div class="empty-container"></div>
+</div>

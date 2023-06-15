@@ -1,0 +1,27 @@
+<div>
+  <div class="products-page ">
+    <div class="filter-options">
+      <!-- Filter options content goes here -->
+    </div>
+
+    <div class="product-list">
+      <div class="product-overview" *ngFor="let item of list">
+        <app-product-overview [product]="item"></app-product-overview>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="paginator">
+      <ngb-pagination
+        [(page)]="currentPage"
+        [pageSize]="pageSize"
+        [collectionSize]="5 * list.length"
+        [boundaryLinks]="true"
+        [maxSize]="5"
+        [rotate]="false"
+        [size]="'small'"
+        (pageChange)="onPageChange($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

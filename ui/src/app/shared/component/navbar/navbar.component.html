@@ -1,0 +1,24 @@
+<nav>
+  <div class="nav-container">
+    <a routerLink="/" routerLinkActive="active-link"  [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      <a [matMenuTriggerFor]="categoriesMenu" routerLinkActive="active-link" routerLink="products">Products</a>
+      <mat-menu #categoriesMenu="matMenu" [class.show]="showCategoriesDropdown">
+        <ng-container *ngFor="let category of categories">
+          <button mat-menu-item *ngIf="category.subcategories.length > 0" [matMenuTriggerFor]="subcategoriesMenu" (mouseenter)="showSubcategories(category)" (mouseleave)="hideSubcategories()">
+            {{ category.name }}
+          </button>
+          <button mat-menu-item *ngIf="category.subcategories.length === 0">
+            {{ category.name }}
+          </button>
+          <mat-menu #subcategoriesMenu="matMenu" [class.show]="isActiveCategory(category) && showSubcategoriesDropdown">
+            <button mat-menu-item *ngFor="let subcategory of category.subcategories">
+              {{ subcategory.name }}
+            </button>
+          </mat-menu>
+        </ng-container>
+      </mat-menu>
+    <a routerLink="/promotions" routerLinkActive="active-link">Promotions</a>
+    <a routerLink="/terms" routerLinkActive="active-link">Terms and Conditions</a>
+    <a routerLink="/about" routerLinkActive="active-link">About Us</a>
+  </div>
+</nav>

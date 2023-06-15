@@ -5,10 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.bogdansoftware.security.dto.AuthenticationRequestDTO;
-import ro.bogdansoftware.security.dto.AuthenticationResponseDTO;
-import ro.bogdansoftware.security.dto.RegisterRequestDTO;
-import ro.bogdansoftware.security.dto.ResetPasswordRequestDTO;
+import ro.bogdansoftware.security.dto.*;
 import ro.bogdansoftware.shared.security.SecurityURLS;
 
 @RestController
@@ -26,6 +23,7 @@ public class SecurityController {
         }
     }
 
+    @CrossOrigin(value = "http://localhost:4200")
     @PostMapping(value = "auth/authenticate")
     private ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody AuthenticationRequestDTO authenticationDTO) {
         return ResponseEntity.ok(service.authenticate(authenticationDTO));
@@ -47,7 +45,13 @@ public class SecurityController {
         service.sendResetPasswordToken(email);
         return ResponseEntity.noContent().build();
     }
-
+    @GetMapping(value = "auth/get-user-data")
+    private ResponseEntity<UserDataDTO> getUserData(@RequestParam(name = "token")String token) {
+        return ResponseEntity.ok(UserDataDTO.builder()
+                .username(service.getUsername(token))
+                .role(service.getRole(token))
+                .build());
+    }
     @PutMapping(value = "auth/reset-password")
     private ResponseEntity<Boolean> resetPassword(
             @RequestParam(name = "token") String token,

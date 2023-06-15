@@ -14,13 +14,35 @@
 
     <packaging>jar</packaging>
 
+
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>application.yml</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <imageName>eureka-server</imageName>
+                    <buildArgs>
+                        <arg>-H:IncludeResources=kc.properties</arg>
+                    </buildArgs>
+                </configuration>
+            </plugin>
+
+
         </plugins>
+
     </build>
 
     <properties>

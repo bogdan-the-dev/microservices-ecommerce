@@ -1,0 +1,58 @@
+nav {
+  background-color: #f0f0f0;
+  padding: 10px;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 68%; /* Adjust the width as needed */
+  margin: 0 auto;
+}
+
+a {
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+  position: relative;
+  margin-right: 20px; /* Adjust the spacing between links */
+}
+
+a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+a:hover::after {
+  background-color: lightblue; /* Adjust the shade of blue if needed */
+}
+
+.active-link::after {
+  background-color: #66B3FF; /* Adjust the shade of blue if needed */
+}
+.subcategories-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 200;
+  background-color: #f0f0f0;
+  padding: 10px;
+  display: none;
+}
+.subcategories-container.show {
+  display: block;
+}
+.dropdown.subcategories-dropdown-second {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin-left: 10px; /* Adjust the spacing between the first and second dropdowns */
+}
+

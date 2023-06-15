@@ -1,0 +1,11 @@
+<div class="container">
+  <h1>Verify account</h1>
+  <div *ngIf="success">
+    <p>Your account was successfully verified.</p>
+  </div>
+  <div *ngIf="!success">
+    <mat-error>
+      <span>{{errorMsg}}</span>
+    </mat-error>
+  </div>
+</div>

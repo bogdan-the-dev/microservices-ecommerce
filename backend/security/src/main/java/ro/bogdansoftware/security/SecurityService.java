@@ -13,6 +13,7 @@ import ro.bogdansoftware.clients.notification.SendNotificationRequest;
 import ro.bogdansoftware.security.dto.AuthenticationRequestDTO;
 import ro.bogdansoftware.security.dto.AuthenticationResponseDTO;
 import ro.bogdansoftware.security.dto.RegisterRequestDTO;
+import ro.bogdansoftware.security.exception.AccountCreationException;
 import ro.bogdansoftware.security.model.ApplicationUser;
 import ro.bogdansoftware.security.model.UserRole;
 
@@ -31,9 +32,17 @@ public class SecurityService {
     private final RabbitMQMessageProducer rabbitMQMessageProducer;
     private final UserDetailsService detailsService;
 
-    public boolean register(RegisterRequestDTO requestDTO) throws Exception {
+    public boolean register(RegisterRequestDTO requestDTO) {
         if (!EmailValidator.isValidEmail(requestDTO.email())) {
-           throw new Exception("Invalid email");
+           throw new AccountCreationException("Invalid email.");
+        }
+
+        if(userRepository.findByUsernameIs(requestDTO.username()).isPresent()) {
+            throw new AccountCreationException("Username already used.");
+        }
+
+        if(userRepository.findByEmailIs(requestDTO.email()).isPresent()) {
+            throw new AccountCreationException("Email already used");
         }
 
         var user = ApplicationUser.builder()
@@ -48,7 +57,6 @@ public class SecurityService {
         userRepository.save(user);
 
         var token = tokenService.generateToken(user, TokenType.ACCOUNT_CONFIRMATION);
-        //todo send token via email
 
         SendNotificationRequest notificationRequest = new SendNotificationRequest(token, NotificationType.CONFIRMATION_EMAIL, requestDTO.username(), "Account confirmation", requestDTO.email());
 
@@ -67,7 +75,7 @@ public class SecurityService {
         var user = this.userRepository.findByUsernameIs(authenticationDTO.username()).orElseThrow();
 
         var jwt = jwtService.generateToken(user);
-        return AuthenticationResponseDTO.builder().accessToken(jwt).build();
+        return AuthenticationResponseDTO.builder().accessToken(jwt).role(user.getRole().name()).build();
 
     }
 
@@ -127,6 +135,10 @@ public class SecurityService {
         var authorities = detailsService.loadUserByUsername(email).getAuthorities();
         UserRole role = UserRole.getUSerRole(String.valueOf(authorities.stream().toList().get(0)));
         return role.name();
+    }
+
+    public String getUsername(String jwtToken) {
+        return jwtService.extractEmail(jwtToken);
     }
 
     private boolean isUserAllowed(ApplicationUser user) {

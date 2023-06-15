@@ -1,0 +1,19 @@
+<div ngbDropdown class="dropdown" #dropdownRef="ngbDropdown">
+  <button style="padding-left: 10px;" ngbDropdownToggle class="btn dropdown-toggle" appDropdown>
+    <mat-icon style="transform: scale(1.5);">account_circle</mat-icon>
+    <span style="padding-left: 5px; font-size: 24px">{{mainButtonText}}</span>
+  </button>
+  <ul ngbDropdownMenu class="dropdown-menu">
+    <div *ngIf="!isAuthenticated" class="container">
+      <app-login-form></app-login-form>
+      <hr>
+      <li><a class="default-a" routerLink="/register" (click)="dropdownRef.close()">Create Account</a></li>
+      <li><a class="default-a" routerLink="/forgot-password" (click)="dropdownRef.close()">Forgot Password</a></li>
+      <li><a class="default-a" routerLink="/send-verification-code" (click)="dropdownRef.close()">Send verification code</a></li>
+    </div>
+    <div *ngIf="isAuthenticated" class="container">
+      <li><a>Account details</a></li>
+      <li><a class="default-a" (click)="onLogout(); dropdownRef.close()">Logout</a></li>
+    </div>
+  </ul>
+</div>

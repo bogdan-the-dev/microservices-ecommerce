@@ -1,0 +1,28 @@
+<div>
+  <h3>Register</h3>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div>
+    <mat-form-field class="full">
+      <mat-label>Username</mat-label>
+      <input matInput formControlName="username" type="username">
+      <mat-error></mat-error>
+    </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="full">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email">
+        <mat-error></mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="full">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="showPassword? 'text' : 'password'" type="password" formControlName="password">
+        <mat-icon matSuffix (click)="onToggle()">{{showPassword?'visibility_off':'visibility'}}</mat-icon>
+      </mat-form-field>
+    </div>
+    <button mat-stroked-button class="full submit-button" [disabled]="registerForm.invalid">Register</button>
+    <mat-error *ngIf="error.length > 0"><span>{{error}}</span></mat-error>
+  </form>
+</div>
