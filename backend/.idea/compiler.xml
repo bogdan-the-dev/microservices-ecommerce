@@ -7,18 +7,44 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="notification" />
         <module name="apigw" />
         <module name="product" />
-        <module name="security" />
         <module name="clients" />
         <module name="amqp" />
-        <module name="common-dependencies" />
-        <module name="category" />
         <module name="inventory" />
         <module name="eureka-server" />
+        <module name="notification" />
+        <module name="security" />
+        <module name="file" />
+        <module name="review" />
+        <module name="common-dependencies" />
+        <module name="category" />
+        <module name="cart-persistence" />
         <module name="order" />
+        <module name="client-information" />
+        <module name="promotion" />
       </profile>
     </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="amqp" options="-parameters" />
+      <module name="apigw" options="-parameters" />
+      <module name="backend" options="-parameters" />
+      <module name="cart-persistence" options="-parameters" />
+      <module name="category" options="-parameters" />
+      <module name="client-information" options="-parameters" />
+      <module name="clients" options="-parameters" />
+      <module name="common-dependencies" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
+      <module name="file" options="-parameters" />
+      <module name="inventory" options="-parameters" />
+      <module name="notification" options="-parameters" />
+      <module name="order" options="-parameters" />
+      <module name="product" options="-parameters" />
+      <module name="promotion" options="-parameters" />
+      <module name="review" options="-parameters" />
+      <module name="security" options="-parameters" />
+    </option>
   </component>
 </project>

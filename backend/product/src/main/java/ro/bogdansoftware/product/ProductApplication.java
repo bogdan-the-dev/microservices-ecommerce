@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients(
-        basePackages = "ro.bogdansoftware.clients.category"
+        basePackages = {"ro.bogdansoftware.clients.inventory", "ro.bogdansoftware.clients.review", "ro.bogdansoftware.clients.file"}
 )
 public class ProductApplication {
 

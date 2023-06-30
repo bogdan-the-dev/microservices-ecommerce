@@ -1,0 +1,35 @@
+spring:
+  cloud:
+    gcp:
+      project-id: just-palace-389214
+      credentials:
+        location: "classpath:just-palace-389214-4e5e3520dc7f.json"
+  application:
+    name: file
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+
+server:
+  port: 8335
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      type: w3c
+
+logging:
+  pattern:
+    level: "%5p[${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true

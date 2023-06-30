@@ -1,0 +1,27 @@
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      type: w3c
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411
+
+logging:
+  pattern:
+    level: "%5p[${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+spring:
+  application:
+    name: eureka-server
+
+server:
+  port: 8761
+
+eureka:
+  client:
+    fetchRegistry: false
+    registerWithEureka: false
+  dashboard:
+    path: dashboard

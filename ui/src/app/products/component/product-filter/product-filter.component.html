@@ -1,0 +1,42 @@
+<div class="filter-options">
+  <div class="filter-category">
+    Brand
+  </div>
+  <div class="filter-option" *ngFor="let brand of brands">
+    <input type="checkbox" id="{{ brand }}" name="brand" [checked]="selectedBrands.includes(brand)" (change)="onCategoryFilterChange(brand)" [value]="brand">
+    <label for="{{ brand }}">{{ brand }}</label>
+  </div>
+
+  <div class="filter-category">
+    Rating
+  </div>
+  <div class="filter-option" *ngFor="let rating of ratings">
+    <input type="checkbox" id="{{ rating }}" name="rating" [checked]="selectedRatings.includes(rating)" (change)="onRatingFilterChange(rating)" [value]="rating">
+    <label for="{{ rating }}"><ng-container *ngFor="let i of Array.from(Array(rating).keys())"><mat-icon>star</mat-icon></ng-container></label>
+  </div>
+
+  <div class="filter-category">
+    Availability
+  </div>
+  <div class="filter-option">
+    <input type="checkbox" id="available" name="availability" >
+    <label for="available">Available only</label>
+  </div>
+
+  <div class="filter-category">
+    Price Range
+  </div>
+  <div class="filter-option price-filter">
+    <div class="slider-container">
+      <div class="price-range" *ngFor="let range of priceRanges">
+        <input type="radio" [id]="range.label" [name]="'price-range'" [(ngModel)]="selectedPriceRange" [value]="range">
+        <label [for]="range.label">{{ range.label }}</label>
+      </div>
+      <div class="custom-range">
+          <app-price-range-selector></app-price-range-selector>
+        </div>
+    </div>
+  </div>
+
+
+</div>

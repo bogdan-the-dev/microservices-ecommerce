@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://order-database:5433/Order"
+    username: "bogdan"
+    password: "pass"
+
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: "org.hibernate.dialect.PostgreSQLDialect"
+  application:
+    name: order
+server:
+  port: 8301
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      type: w3c
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411
+logging:
+  pattern:
+    level: "%5p[${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true

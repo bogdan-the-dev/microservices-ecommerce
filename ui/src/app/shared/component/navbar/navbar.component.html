@@ -1,17 +1,17 @@
 <nav>
   <div class="nav-container">
     <a routerLink="/" routerLinkActive="active-link"  [routerLinkActiveOptions]="{ exact: true }">Home</a>
-      <a [matMenuTriggerFor]="categoriesMenu" routerLinkActive="active-link" routerLink="products">Products</a>
+      <a [matMenuTriggerFor]="categoriesMenu" routerLinkActive="active-link" >Products</a>
       <mat-menu #categoriesMenu="matMenu" [class.show]="showCategoriesDropdown">
         <ng-container *ngFor="let category of categories">
           <button mat-menu-item *ngIf="category.subcategories.length > 0" [matMenuTriggerFor]="subcategoriesMenu" (mouseenter)="showSubcategories(category)" (mouseleave)="hideSubcategories()">
             {{ category.name }}
           </button>
-          <button mat-menu-item *ngIf="category.subcategories.length === 0">
+          <button mat-menu-item *ngIf="category.subcategories.length === 0" (click)="onNavigate([category.name, ''])">
             {{ category.name }}
           </button>
-          <mat-menu #subcategoriesMenu="matMenu" [class.show]="isActiveCategory(category) && showSubcategoriesDropdown">
-            <button mat-menu-item *ngFor="let subcategory of category.subcategories">
+          <mat-menu #subcategoriesMenu="matMenu" [class.show]="isActiveCategory(category) && showSubcategoriesDropdown" >
+            <button mat-menu-item *ngFor="let subcategory of category.subcategories" (click)="onNavigate([category.name, subcategory.name])">
               {{ subcategory.name }}
             </button>
           </mat-menu>

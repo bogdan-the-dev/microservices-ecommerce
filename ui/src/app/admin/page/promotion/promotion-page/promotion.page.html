@@ -1,0 +1,67 @@
+<h2>Promotion Management</h2>
+
+<section>
+  <button mat-icon-button color="primary" aria-label="Add promotion" matTooltip="Add promotion" (click)="openPopupCreate()">
+    <mat-icon>add</mat-icon>
+  </button>
+  <button mat-icon-button color="primary" aria-label="Edit promotion" matTooltip="Edit promotion" [disabled]="selection.selected.length != 1" (click)="openPopupEdit()" >
+    <mat-icon>edit</mat-icon>
+  </button>
+  <button mat-icon-button color="primary" aria-label="Delete promotion" matTooltip="Delete promotion" [disabled]="!selection.hasValue()" (click)="onDelete()">
+    <mat-icon>delete</mat-icon>
+  </button>
+  <button mat-icon-button color="primary" matTooltip="Enable promotions" aria-label="Enable promotions" [disabled]="!selection.hasValue()" (click)="onEnable()">
+    <mat-icon>check_circle</mat-icon>
+  </button>
+  <button mat-icon-button color="primary" matTooltip="Disable promotions" aria-label="Disable promotions" [disabled]="!selection.hasValue()" (click)="onDisable()">
+    <mat-icon>cancel</mat-icon>
+  </button>
+  <button mat-icon-button color="primary" matTooltip="Refresh" aria-label="Refresh" (click)="onRefresh()">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</section>
+<mat-divider></mat-divider>
+<table matSort (matSortChange)="sortData($event)" mat-table [dataSource]="promotions" class="mat-elevation-z8 full-width">
+  <ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef>
+      <mat-checkbox (change)="masterToggle()"
+                    [checked]="isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+      </mat-checkbox>
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="id"> Id </th>
+    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="name" > Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+  <ng-container matColumnDef="percentage">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="percentage"> Percentage </th>
+    <td mat-cell *matCellDef="let element"> {{element.percentage}} </td>
+  </ng-container>
+  <ng-container matColumnDef="active">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="active"> Active </th>
+    <td mat-cell *matCellDef="let element">
+      <mat-icon [ngClass]="{'green-check': element.active, 'red-x': !element.active}">
+      {{ element.active ? 'check_circle' : 'cancel' }}
+    </mat-icon> </td>
+  </ng-container>
+  <ng-container matColumnDef="creationTime">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="creationTimestamp"> Creation date </th>
+    <td mat-cell *matCellDef="let element"> {{element.creationTimestamp}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

@@ -1,0 +1,28 @@
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      type: w3c
+
+
+
+logging:
+  pattern:
+    level: "%5p[${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+spring:
+  application:
+    name: eureka-server
+
+server:
+  port: 8761
+
+eureka:
+  client:
+    fetchRegistry: false
+    registerWithEureka: false
+  instance:
+    hostname: localhost
+  dashboard:
+    path: dashboard

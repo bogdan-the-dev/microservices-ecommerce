@@ -1,0 +1,150 @@
+<div class="popup-container">
+  <div style="height: 40px">
+    <h3>{{buttonAction + ' Product'}}</h3>
+    <button class="close-button" matTooltip="Cancel" (click)="closeDialog()"><mat-icon>close</mat-icon></button>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="overflow-form">
+    <div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Title:</mat-label>
+        <input matInput formControlName="title">
+        <mat-error *ngIf="form.controls['title']?.invalid && form.controls['title']?.touched">Title is required</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput style="resize: none" [rows]="10" formControlName="description"></textarea>
+        <mat-error *ngIf="form.controls['description'].invalid && form.controls['description'].touched">Description is required</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Price</mat-label>
+        <input matInput type="number" formControlName="price">
+        <mat-error *ngIf="form.controls['price'].invalid && form.controls['price'].touched">Price is required and must be a positive number</mat-error>
+      </mat-form-field>
+
+    </div>
+    <div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category" (selectionChange)="onCategorySelectionChange($event.value)">
+          <mat-option *ngFor="let cat of category" [value]="cat">{{ cat.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.controls['category'].invalid">Category is required</mat-error>
+
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Subcategory</mat-label>
+        <mat-select formControlName="subcategory" [disabled]="disableSubcategory">
+          <mat-option *ngFor="let subcategory of subcategoryOptions" [value]="subcategory">{{ subcategory.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.controls['subcategory'].invalid">Subcategory is required</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <div>
+        <div style="display: flex">
+          <h3>Photos</h3>
+          <button mat-icon-button color="primary" type="button" (click)="fileInput.click()" matTooltip="Upload new photo">
+            <mat-icon>add_circle</mat-icon></button>
+        </div>
+        <span>{{this.selectedPhotos.length + ' photos'}}</span>
+        <input hidden="hidden" type="file"  #fileInput (change)="onPhotosSelected($event)" accept="image/*" multiple>
+      </div>
+      <div cdkDropList (cdkDropListDropped)="reorderSelectedPhotos($event)">
+        <div *ngFor="let photo of selectedPhotos; let i = index" cdkDrag>
+          <img [src]="photo" alt="Selected Photo" style="max-width: 200px;">
+          <button mat-icon-button color="warn" (click)="removeSelectedPhoto(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div>
+      <div style="display: flex">
+        <h3>Specifications</h3>
+        <button mat-icon-button color="primary" type="button"  (click)="addSpecificationSubcategory()" matTooltip="Add new specification category">
+          <mat-icon>add_circle</mat-icon>
+        </button>
+      </div>
+      <div formArrayName="specifications">
+        <div *ngFor="let subcategoryGroup of specificationsFormArray.controls; let subcategoryIndex = index"
+             [formGroupName]="subcategoryIndex">
+          <div>
+            <mat-form-field appearance="fill" style="width: 83%">
+              <mat-label>Specification category</mat-label>
+              <input matInput formControlName="subcategory">
+            </mat-form-field>
+
+            <button mat-icon-button color="primary" type="button" matTooltip="Add new specification"
+                    (click)="addSpecificationField(subcategoryIndex)">
+              <mat-icon>add_circle</mat-icon>
+            </button>
+
+            <button mat-icon-button color="warn" type="button"
+                    (click)="removeSpecificationSubcategory(subcategoryIndex)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+
+          <div formArrayName="fields">
+            <div *ngFor="let specGroup of getSpecsArray(subcategoryGroup).controls; let specIndex = index"
+                 [formGroupName]="specIndex">
+              <div>
+                <mat-form-field appearance="fill" style="margin-right: 37px">
+                  <mat-label>Field name</mat-label>
+                  <input matInput formControlName="name">
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Field value</mat-label>
+                  <input matInput formControlName="value">
+                </mat-form-field>
+
+                <button mat-icon-button color="warn" type="button"
+                        (click)="removeSpecificationField(subcategoryIndex, specIndex)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Promotion</mat-label>
+        <mat-select formControlName="promotion" [compareWith]="comparePromotions">
+          <mat-option [value]="null">No Promotion</mat-option>
+          <mat-option *ngFor="let promotion of promotions" [value]="promotion">
+            {{ promotion.name + ' | ' + promotion.percentage + '%' }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-checkbox formControlName="outOfStock"  *ngIf="!editMode" (change)="onOutOfStockChange($event)">Out of Stock</mat-checkbox>
+      <mat-checkbox formControlName="isEnabled" *ngIf="editMode">Enable</mat-checkbox>
+      <div *ngIf="!editMode">
+        <mat-form-field appearance="fill">
+          <mat-label>Initial Quantity</mat-label>
+          <input [disabled]="disableInitialQuantity" matInput type="number" formControlName="initialQuantity">
+          <mat-error *ngIf="form.get('initialQuantity').invalid && form.get('initialQuantity').touched">
+            Initial Quantity is required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
+  </form>
+
+</div>

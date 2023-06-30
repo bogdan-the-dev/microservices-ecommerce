@@ -1,0 +1,72 @@
+<div class="container w-80">
+  <h3 class="title">{{ product.title }}</h3>
+<div>
+  <div class="product-container">
+
+    <div class="carousel-price-container">
+      <div class="product-carousel">
+        <div class="carousel-container">
+          <div *ngFor="let photo of product.photos; let i = index" class="carousel-item" [class.active]="currentPictureIndex === i">
+            <img [src]="photo" alt="Product Photo" />
+          </div>
+        </div>
+        <p class="current-picture">{{ currentPictureIndex + 1 }} / {{ product.photos.length }}</p>
+        <button class="next-button left" (click)="prevPicture()"><mat-icon class="arrow">keyboard_arrow_left</mat-icon></button>
+        <button class="next-button right" (click)="nextPicture()"><mat-icon class="arrow">keyboard_arrow_right</mat-icon></button>
+      </div>
+    </div>
+    <div class="container-price-variations">
+    <div class="product-details">
+      <div *ngIf="product.promotion !== undefined" class="old-price">$ {{product.price}}</div>
+      <div class="price">$ {{ (product.price - (product.price * (product.promotion.percentage / 100))).toFixed(2)}} </div>
+      <button class="add-to-cart-button" (click)="onAddToCart()"><mat-icon class="cart">add_shopping_cart</mat-icon>Add to Cart</button>
+    </div>
+    <div class="variations">
+      <div style="margin-top: 15px" *ngFor="let variation of variations">
+        <div class="variation-title">
+          <h5>{{variation[0]}}</h5>
+        </div>
+        <div class="variation-container">
+          <mat-chip-list >
+            <mat-chip *ngFor="let variationOption of variation[1]" [routerLink]="variationOption[0]">
+              {{variationOption[1]}}
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div>
+    <p>{{ product.category + '/' + product.subcategory }}</p>
+  </div>
+  <div>
+    <ul class="no-bullets">
+      <li id="description">
+        <a><h4>Description</h4></a>
+        <div>
+          <p>{{product.description}}</p>
+        </div>
+      </li>
+      <li>
+        <a><h4>Specifications</h4></a>
+        <div>
+          <ul>
+            <li *ngFor="let specGroup of product.specifications | keyvalue">
+              <strong>{{ specGroup.key }}</strong>
+              <ul>
+                <li *ngFor="let spec of specGroup.value | keyvalue">
+                  {{ spec.key }}: {{ spec.value }}
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+
+</div>
+
+</div>

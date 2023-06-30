@@ -4,6 +4,8 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {select, Store} from "@ngrx/store";
 import {LoginAction} from "../../state-management/login.action";
 import {filter} from "rxjs";
+import {AuthRedirectService} from "../../../shared/service/auth-redirect.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login-form',
@@ -18,7 +20,7 @@ export class LoginFormComponent extends BaseComponent implements OnInit{
   errorMessage: ''
   error: boolean;
 
-  constructor(private store: Store<any>) {
+  constructor(private store: Store<any>, private authRedirectService: AuthRedirectService, private router: Router) {
     super();
   }
 
@@ -29,6 +31,22 @@ export class LoginFormComponent extends BaseComponent implements OnInit{
         filter(s => s !== undefined)
       ).subscribe(error => {
         this.errorMessage = error;
+      })
+    )
+    this.subscriptions.push(
+      this.store.pipe(
+        select(s => s.loginModuleFeature.loginState.success),
+        filter(s => s !== undefined)
+      ).subscribe(loginSuccess => {
+        if(loginSuccess) {
+          const redirectUrl = this.authRedirectService.getRedirectUrl()
+          if(redirectUrl != undefined || redirectUrl != null || redirectUrl !== '') {
+            this.navigate(redirectUrl)
+          }
+          else {
+            this.navigate('')
+          }
+        }
       })
     )
     this.initForm();
@@ -49,6 +67,10 @@ export class LoginFormComponent extends BaseComponent implements OnInit{
 
   onToggle() {
     this.showPassword = !this.showPassword;
+  }
+
+  private navigate(path: string) {
+    this.router.navigate([path])
   }
 
 }

@@ -5,12 +5,11 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
+import ro.bogdansoftware.clients.inventory.InventoryDTO;
 import ro.bogdansoftware.clients.inventory.ListOfInventoryItemsDTO;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 @Service

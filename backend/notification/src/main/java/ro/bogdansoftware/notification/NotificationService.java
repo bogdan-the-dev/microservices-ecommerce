@@ -2,7 +2,6 @@ package ro.bogdansoftware.notification;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ro.bogdansoftware.clients.notification.EmailType;
 import ro.bogdansoftware.clients.notification.SendNotificationRequest;
 
 @Service
@@ -10,7 +9,6 @@ import ro.bogdansoftware.clients.notification.SendNotificationRequest;
 public class NotificationService {
 
     private final EmailService emailService;
-    private final TemplateService templateService;
 
     public void sendNotification(SendNotificationRequest request) {
         switch (request.type()) {

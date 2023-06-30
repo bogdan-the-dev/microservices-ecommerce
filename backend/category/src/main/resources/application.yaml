@@ -17,13 +17,9 @@ spring:
     name: category
   data:
     mongodb:
-      authentication-database: admin
-      username: bogdan
-      password: password
-      database: category_database
-      port: 27018
-      host: localhost
       auto-index-creation: true
+      uri: mongodb://bogdan:password@localhost:27018/category_database?authSource=admin
+
 
 eureka:
   client:

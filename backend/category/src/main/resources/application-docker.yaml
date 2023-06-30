@@ -1,0 +1,33 @@
+server:
+  port: 8010
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      type: w3c
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411
+
+logging:
+  pattern:
+    level: "%5p[${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+spring:
+  application:
+    name: category
+  data:
+    mongodb:
+      auto-index-creation: true
+      uri: mongodb://bogdan:password@category-database:27018/category_database?authSource=admin
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true

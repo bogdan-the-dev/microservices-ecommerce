@@ -16,6 +16,10 @@ spring:
   application:
     name: inventory
 
+database:
+  server-ip: localhost
+  port: 6380
+
 eureka:
   client:
     serviceUrl:

@@ -3,6 +3,7 @@ package ro.bogdansoftware.inventory;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ro.bogdansoftware.clients.inventory.InventoryDTO;
 import ro.bogdansoftware.clients.inventory.ListOfInventoryItemsDTO;
 
 import java.net.URI;

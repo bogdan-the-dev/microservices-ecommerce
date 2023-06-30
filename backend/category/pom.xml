@@ -19,7 +19,13 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+            </plugin><plugin><groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <source>17</source>
+                <target>17</target>
+            </configuration>
+        </plugin>
         </plugins>
     </build>
 
@@ -32,11 +38,28 @@
                         <groupId>com.google.cloud.tools</groupId>
                         <artifactId>jib-maven-plugin</artifactId>
                         <version>3.3.2</version>
+                        <configuration>
+                            <from>
+                                <image>eclipse-temurin:17</image>
+                                <platforms>
+                                    <platform>
+                                        <architecture>amd64</architecture>
+                                        <os>linux</os>
+                                    </platform>
+                                </platforms>
+                            </from>
+                            <to>
+                                <tags>
+                                    <tag>latest</tag>
+                                </tags>
+                                <image></image>
+                            </to>
+                        </configuration>
                         <executions>
                             <execution>
                                 <phase>package</phase>
                                 <goals>
-                                    <goal>dockerBuild</goal>
+                                    <goal>build</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -50,6 +73,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <image>bogdantamba/${project.artifactId}:${project.version}</image>
     </properties>
 
     <dependencies>

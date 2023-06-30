@@ -23,6 +23,11 @@
       <module>security</module>
     <module>apigw</module>
     <module>common-dependencies</module>
+      <module>review</module>
+    <module>file</module>
+      <module>client-information</module>
+      <module>cart-persistence</module>
+    <module>promotion</module>
   </modules>
 
   <parent>

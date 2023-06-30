@@ -52,14 +52,6 @@ public class SecurityConfiguration {
                 //.requestMatchers("**").permitAll()
                 .and()
 */
-                .cors().configurationSource(request -> {
-                    var cors = new CorsConfiguration();
-                    cors.setAllowedOrigins(List.of("https://localhost:4200", "https://127.0.0.1:80", "http://localhost:4200"));
-                    cors.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
-                    cors.setAllowedHeaders(List.of("*"));
-                    cors.setAllowCredentials(true);
-                    return cors;
-                }).and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

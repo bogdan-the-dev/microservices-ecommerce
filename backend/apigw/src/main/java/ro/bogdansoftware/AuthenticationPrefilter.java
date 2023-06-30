@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import ro.bogdansoftware.clients.security.ISecurityClient;
+import ro.bogdansoftware.shared.security.InternalAuthResponse;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -22,7 +23,16 @@ import java.util.function.Predicate;
 public class AuthenticationPrefilter extends AbstractGatewayFilterFactory<AuthenticationPrefilter.Config> {
 
     private final WebClient.Builder webClient;
-    private final List<String> authUrl = List.of("api/v1/order/test");
+    private final List<String> authUrl = List.of(
+            "api/v1/order/test",
+            "api/v1/reviews/add-review",
+            "api/v1/reviews/delete-individual-review",
+            "api/v1/cart/get-cart",
+            "api/v1/cart/add-item",
+            "api/v1/cart/empty-cart",
+            "api/v1/cart/remove-item"
+
+    );
 
 
     public AuthenticationPrefilter(WebClient.Builder webClient) {
@@ -34,15 +44,16 @@ public class AuthenticationPrefilter extends AbstractGatewayFilterFactory<Authen
         return ((exchange, chain) -> {
             if (isSecured.test(exchange.getRequest())) {
                 String token = exchange.getRequest().getHeaders().getFirst("Authorization");
-                String result = webClient.build().get().uri("http://SECURITY/api/v1/authorize?token="+token).header("Authorization", token)
-                        .retrieve().bodyToMono(String.class).block();
+                InternalAuthResponse result = webClient.build().get().uri("http://SECURITY/api/v1/authorize?token="+token).header("Authorization", token)
+                        .retrieve().bodyToMono(InternalAuthResponse.class).block();
 
                 if(result == null) {
                     throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
 
                 ServerWebExchange modifiedExchange = exchange.mutate().request(builder -> {
-                    builder.header("auth-user-role", result);
+                    builder.header("auth-user-role", result.role());
+                    builder.header("USERNAME", result.username());
                 }).build();
                 return chain.filter(modifiedExchange);
             }

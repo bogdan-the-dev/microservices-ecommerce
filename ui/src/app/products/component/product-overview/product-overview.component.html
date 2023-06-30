@@ -1,0 +1,33 @@
+<div class="product-overview">
+  <div class="product-container" style="cursor: pointer" [routerLink]="['/','product', getLink(), product.id]">
+  <div class="product-image">
+    <img [src]="product.imagePath" alt="Product Image" [ngStyle]="{'max-width.px': 280, 'height.px': 280}">
+  </div>
+  <div class="product-details">
+    <span class="product-title">{{ product.title }}</span>
+  </div>
+  </div>
+    <div class="product-info">
+      <div class="product-rating">
+        <div class="stars">
+          <span class="star" [style.width.%]="(product.rating / 5) * 100"></span>
+        </div>
+        <span class="reviews">({{ product.numberOfReviews }})</span>
+      </div>
+      <div class="promo-info" *ngIf="product.promActive">
+        <span>{{ product.promo.name }} - {{ product.promo.percentage }}% off</span>
+      </div>
+      <div class="price" *ngIf="product.promActive">
+        <span class="old-price">Old Price: {{ product.price }}</span>
+      </div>
+    </div>
+    <div class="price" *ngIf="product.promActive">
+      <span class="new-price">New Price: {{ (product.price - (product.price * (product.promo.percentage / 100))).toFixed(2) }}</span>
+    </div>
+    <div class="price" *ngIf="!product.promActive">
+      <span class="new-price">Price: {{ product.price }}</span>
+    </div>
+  <button class="add-to-cart-button" (click)="onAddToCart()" *ngIf="product.isAvailable; else outOfStockButton">Add to Cart</button>
+  <ng-template #outOfStockButton>
+    <button class="out-of-stock-button">Out of Stock</button>
+  </ng-template></div>

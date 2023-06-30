@@ -1,0 +1,8 @@
+services:
+  redis:
+    image: redis
+    container_name: redis-cart-persistence
+    volumes:
+      - ./data:/data
+    ports:
+      - 6385:6379

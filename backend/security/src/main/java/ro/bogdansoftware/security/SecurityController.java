@@ -1,11 +1,10 @@
 package ro.bogdansoftware.security;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.bogdansoftware.security.dto.*;
+import ro.bogdansoftware.shared.security.InternalAuthResponse;
 import ro.bogdansoftware.shared.security.SecurityURLS;
 
 @RestController
@@ -23,7 +22,6 @@ public class SecurityController {
         }
     }
 
-    @CrossOrigin(value = "http://localhost:4200")
     @PostMapping(value = "auth/authenticate")
     private ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody AuthenticationRequestDTO authenticationDTO) {
         return ResponseEntity.ok(service.authenticate(authenticationDTO));
@@ -61,9 +59,10 @@ public class SecurityController {
     }
 
     @GetMapping(value = SecurityURLS.AUTHORIZE)
-    public ResponseEntity<String> authorize(@RequestParam(value = "token")String token) {
+    public ResponseEntity<InternalAuthResponse> authorize(@RequestParam(value = "token")String token) {
         var role = service.getRole(token.substring(7));
-        return ResponseEntity.ok(role);
+        var username = service.getUsername(token.substring(7));
+        return ResponseEntity.ok(new InternalAuthResponse(username, role));
         /*response.setHeader("auth-user-role", role);
         return ResponseEntity.ok().build();*/
     }

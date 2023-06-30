@@ -1,13 +1,292 @@
+version: '3.0'
+
+networks:
+  spring:
+    driver: bridge
+  product-database-network:
+    driver: bridge
+  security-database-network:
+    driver: bridge
+  review-database-network:
+    driver: bridge
+  promotion-database-network:
+    driver: bridge
+  category-database-network:
+    driver: bridge
+  cart-persistence-database-network:
+    driver: bridge
+  inventory-database-network:
+    driver: bridge
+  order-database-network:
+    driver: bridge
+
+
+
 services:
   zipkin:
     image: openzipkin/zipkin
     container_name: zipkin
     ports:
       - 9411:9411
+    networks:
+      - spring
 
   rabbitmq:
     image: rabbitmq:3.11-management-alpine
     container_name: rabbitmq
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - spring
+
+  product:
+    image: bogdantamba/product:latest
+    container_name: product
+    ports:
+      - "8080:8080"
+    depends_on:
+      - apigw
+    networks:
+      - product-database-network
+      - spring
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  product_db:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: bogdan
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: product_database
+    ports:
+      - "27017:27017"
+    volumes:
+      - product-db-data:/data/product/db
+    networks:
+      - product-database-network
+
+  security:
+    image: bogdantamba/security:latest
+    container_name: security
+    depends_on:
+      - apigw
+      - security-database
+    networks:
+      - spring
+      - security-database-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8502:8502"
+
+  security-database:
+    image: postgres:15.0-alpine
+    container_name: security-database
+    environment:
+      - POSTGRES_USER=bogdan
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=Security
+    ports:
+      - "5434:5432"
+    volumes:
+      - security-db-data:/data/security/db
+    networks:
+      - security-database-network
+
+  review:
+    image: bogdantamba/review:latest
+    container_name: review
+    depends_on:
+      - apigw
+      - review-database
+    networks:
+      - spring
+      - review-database-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8395:8395"
+  review-database:
+    image: mongo:latest
+    container_name: review-database
+    command: mongod --port 27021
+    ports:
+      - "27021:27021"
+    networks:
+      - review-database-network
+    volumes:
+      - review-db-data:/data/review/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: bogdan
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: review_database
+
+  eureka-server:
+    image: bogdantamba/eureka-server:latest
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      - zipkin
+    networks:
+      - spring
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  promotion:
+    image: bogdantamba/promotion:latest
+    container_name: promotion
+    depends_on:
+      - apigw
+      - zipkin
+      - promotion-database
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - promotion-database-network
+
+  promotion-database:
+    image: mongo:latest
+    container_name: promotion-database
+    command: mongod --port 27025
+    ports:
+      - "27025:27025"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: bogdan
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: promotion_database
+    volumes:
+      - promotion-db-data:/data/review/db
+    networks:
+      - promotion-database-network
+
+  notification:
+    image: bogdantamba/notification:latest
+    container_name: notification
+    depends_on:
+      - zipkin
+      - rabbitmq
+      - eureka-server
+      - apigw
+    networks:
+      - spring
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+  apigw:
+    image: bogdantamba/apigw:latest
+    container_name: apigw
+    ports:
+      - "8283:8283"
+    depends_on:
+      - zipkin
+      - eureka-server
+    networks:
+      - spring
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  file:
+    image: bogdantamba/file:latest
+    container_name: file
+    depends_on:
+      - zipkin
+      - eureka-server
+      - apigw
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/resources/just-palace-389214-4e5e3520dc7f.json
+    networks:
+      - spring
+
+  category:
+    image: bogdantamba/category:latest
+    container_name: category
+    depends_on:
+      - zipkin
+      - eureka-server
+      - apigw
+      - category-database
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - category-database-network
+
+  category-database:
+    image: mongo:latest
+    container_name: category-database
+    command: mongod --port 27018
+    ports:
+      - "27018:27018"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: bogdan
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: category_database
+    volumes:
+      - category-db-data:/data/review/db
+    networks:
+      - category-database-network
+
+  cart-persistence:
+    image: bogdantamba/cart-persistence:latest
+    container_name: cart-persistence
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - cart-persistence-database-network
+    depends_on:
+      - cart-persistence-database
+      - zipkin
+      - apigw
+      - eureka-server
+
+  cart-persistence-database:
+    image: redis
+    container_name: cart-persistence-database
+    command: redis-server --port 6385
+    ports:
+      - "6385:6385"
+    volumes:
+      - cart-persistence-db-data:/data/cart-persistence/db
+    networks:
+      - cart-persistence-database-network
+
+  inventory:
+    image: bogdantamba/inventory:latest
+    container_name: inventory
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - inventory-database-network
+    depends_on:
+      - zipkin
+      - apigw
+      - eureka-server
+      - inventory-database
+
+  inventory-database:
+    image: redis
+    container_name: inventory-database
+    command: redis-server --port 6380
+    ports:
+      - "6380:6380"
+    volumes:
+      - inventory-db-data:/data/inventory/db
+    networks:
+      - inventory-database-network
+
+
+volumes:
+  product-db-data:
+  security-db-data:
+  review-db-data:
+  promotion-db-data:
+  category-db-data:
+  inventory-db-data:
+  cart-persistence-db-data:
+  order-db-data:

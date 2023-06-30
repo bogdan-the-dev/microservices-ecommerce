@@ -1,0 +1,13 @@
+<div class="price-range-slider">
+  <div class="slider-controls">
+    <label>
+      <input type="checkbox" [(ngModel)]="sliderEnabled" (click)="toggleDisabled()">
+      Enable Slider
+    </label>
+  </div>
+  <div class="slider-container">
+    <div class="slider-wrapper">
+      <ngx-slider  [(value)]="minPrice" [(highValue)]="maxPrice" [options]="options" ></ngx-slider>
+    </div>
+  </div>
+</div>

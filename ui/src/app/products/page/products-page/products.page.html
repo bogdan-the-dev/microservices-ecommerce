@@ -2,11 +2,12 @@
   <div class="products-page ">
     <div class="filter-options">
       <!-- Filter options content goes here -->
+      <app-product-filter></app-product-filter>
     </div>
 
     <div class="product-list">
-      <div class="product-overview" *ngFor="let item of list">
-        <app-product-overview [product]="item"></app-product-overview>
+      <div class="product-overview" *ngFor="let product of products">
+        <app-product-overview [product]="product"></app-product-overview>
       </div>
     </div>
   </div>
@@ -15,9 +16,9 @@
       <ngb-pagination
         [(page)]="currentPage"
         [pageSize]="pageSize"
-        [collectionSize]="5 * list.length"
+        [collectionSize]="numberOfProducts"
         [boundaryLinks]="true"
-        [maxSize]="5"
+
         [rotate]="false"
         [size]="'small'"
         (pageChange)="onPageChange($event)"

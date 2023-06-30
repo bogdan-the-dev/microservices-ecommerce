@@ -1,49 +1,33 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
+import {CategoryService} from "../../../admin/service/category.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-navbar',
   templateUrl: 'navbar.component.html',
   styleUrls: ['navbar.component.less']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   showCategoriesDropdown = false;
   showSub: boolean = false
-  selectedCategory /*= {
-    id: 1,
-    name: 'Category 1',
-    subcategories: [
-      { id: 1, name: 'Subcategory 1.1' },
-      { id: 2, name: 'Subcategory 1.2' },
-      { id: 3, name: 'Subcategory 1.3' }
-    ]
-  }*/
+
   showSubcategoriesDropdown = false;
 
 
-  categories = [
-    {
-      id: 1,
-      name: 'Category 1',
-      subcategories: [
-        { id: 1, name: 'Subcategory 1.1' },
-        { id: 2, name: 'Subcategory 1.2' },
-        { id: 3, name: 'Subcategory 1.3' }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Category 2',
-      subcategories: [
-        { id: 4, name: 'Subcategory 2.1' },
-        { id: 5, name: 'Subcategory 2.2' },
-        { id: 6, name: 'Subcategory 2.3' }
-      ]
-    }
-    // Add more categories and subcategories as needed
-  ];
+  categories
 
   activeCategory: any = null;
   activeCategoryIndex: number = -1;
+
+  constructor(private categoryService: CategoryService, private router: Router) {
+  }
+
+  ngOnInit() {
+    this.categoryService.getCategories().subscribe(res => {
+      this.categories = res
+    })
+  }
+
 
   showCategories(): void {
     this.showCategoriesDropdown = true;
@@ -66,5 +50,10 @@ export class NavbarComponent {
 
   isActiveCategory(category: any): boolean {
     return this.activeCategoryIndex !== -1 && category.id === this.categories[this.activeCategoryIndex].id;
+  }
+
+  onNavigate(val: [category: string, subcategory: string]) {
+    this.router.navigate(['products', val[0], val[1]])
+    console.log(val)
   }
 }

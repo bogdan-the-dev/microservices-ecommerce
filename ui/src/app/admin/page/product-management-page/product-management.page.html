@@ -1,0 +1,104 @@
+<h2>Product Management</h2>
+
+<section class="button-section">
+  <div class="button-group">
+    <button mat-icon-button color="primary" aria-label="Add product" matTooltip="Add product" (click)="onCreate()">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" aria-label="Edit product" matTooltip="Edit product" [disabled]="selection.selected.length != 1" (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" matTooltip="Create variation" [disabled]="selection.selected.length < 2">
+      <mat-icon>ballot</mat-icon>
+    </button>
+
+    <button mat-icon-button color="primary" matTooltip="Change category" [disabled]="selection.selected.length < 1">
+      <mat-icon>category</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" matTooltip="Enable" [disabled]="selection.selected.length < 1">
+      <mat-icon>check_circle</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" matTooltip="Disable" [disabled]="selection.selected.length < 1">
+      <mat-icon>cancel</mat-icon>
+    </button>
+
+    <button mat-icon-button color="primary" aria-label="Delete product" matTooltip="Delete product" [disabled]="!selection.hasValue()" (click)="onDelete()">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" matTooltip="Refresh" aria-label="Refresh" (click)="onRefresh()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+
+  </div>
+  <div class="search-field">
+    <mat-form-field>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="text" [(ngModel)]="searchKeyword" (input)="applyFilter()" placeholder="Search by Title" />
+    </mat-form-field>
+  </div>
+</section>
+
+<mat-divider></mat-divider>
+<div style="max-height: 630px; overflow-y: auto">
+  <table matSort (matSortChange)="sortData($event)" mat-table [dataSource]="filteredProducts" class="mat-elevation-z8 full-width" style="max-height: 800px">
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="masterToggle()"
+                      [checked]="isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="imagePath">
+      <th mat-header-cell *matHeaderCellDef > Image </th>
+      <td mat-cell *matCellDef="let element"> <img style="max-width: 150px;max-height: 150px;" [src]="element.imagePath"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="title" > Title </th>
+      <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+    </ng-container>
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="price"> Price </th>
+      <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+    </ng-container>
+    <ng-container matColumnDef="promoActive">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="promoActive"> Promotion Active </th>
+      <td mat-cell *matCellDef="let element"> {{element.promoActive}} </td>
+    </ng-container>
+    <ng-container matColumnDef="isAvailable">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="isAvailable"> Is Available </th>
+      <td mat-cell *matCellDef="let element"> {{element.isAvailable}} </td>
+    </ng-container>
+    <ng-container matColumnDef="category">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="category"> Category </th>
+      <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+    </ng-container>
+    <ng-container matColumnDef="subcategory">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="subcategory"> Subcategory </th>
+      <td mat-cell *matCellDef="let element"> {{element.subcategory == null?'None':element.subcategory}} </td>
+    </ng-container>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> Id </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+    <ng-container matColumnDef="creationTime" >
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="creationDate"> Creation Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.creationTime}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isEnabled" >
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="isEnabled"> Enabled </th>
+      <td mat-cell *matCellDef="let element"> {{element.isEnabled}} </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

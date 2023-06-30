@@ -1,5 +1,6 @@
 package ro.bogdansoftware;
 
+import io.opentelemetry.exporter.zipkin.ZipkinSpanExporter;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -19,9 +20,24 @@ public class Configuration {
                 .route("order", r -> r.path("/api/v1/order/**")
                         .filters(f -> f.filter(authFilter.apply(new AuthenticationPrefilter.Config())))
                         .uri("lb://ORDER"))
+                .route("review", r -> r.path("/api/v1/reviews/get-reviews", "/api/v1/reviews/verify-review-present","/api/v1/reviews/add-review", "/api/v1/reviews/get-rating", "/api/v1/reviews/delete-individual-review")
+                        .filters(f -> f.filter(authFilter.apply(new AuthenticationPrefilter.Config())))
+                        .uri("lb://REVIEW"))
+                .route("cart", r -> r.path("/api/v1/cart/**")
+                        .filters(f -> f.filter(authFilter.apply(new AuthenticationPrefilter.Config())))
+                        .uri("lb://CART-PERSISTENCE"))
+                .route("promotion", r -> r.path("/api/v1/promotion/**")
+                        .filters(f -> f.filter(authFilter.apply(new AuthenticationPrefilter.Config())))
+                        .uri("lb://PROMOTION"))
                 .build();
     }
 
+
+    @Bean
+    public ZipkinSpanExporter zipkinSpanExporter() {
+        return ZipkinSpanExporter.builder().setEndpoint("http://zipkin:9411")
+                .build();
+    }
 
     @Bean
     @LoadBalanced

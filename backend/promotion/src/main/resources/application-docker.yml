@@ -1,0 +1,38 @@
+server:
+  port: 8118
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      type: w3c
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411
+
+logging:
+  pattern:
+    level: "%5p[${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+
+spring:
+
+  data:
+    mongodb:
+
+      auto-index-creation: true
+      uri: mongodb://bogdan:password@promotion-database:27025/promotion_database?authSource=admin
+
+  application:
+    name: promotion
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true

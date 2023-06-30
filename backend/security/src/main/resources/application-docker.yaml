@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://security-database:5432/Security"
+    username: "bogdan"
+    password: "pass"
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: "org.hibernate.dialect.PostgreSQLDialect"
+
+  application:
+    name: security
+
+  rabbitmq:
+    addresses: rabbitmq:5672
+
+server:
+  port: 8502
+
+management:
+  tracing:
+    propagation:
+      type: w3c
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411
+
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
+  pattern:
+    level: "%5p[${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true

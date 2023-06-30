@@ -5,6 +5,7 @@ import {VerifyAccountPage} from "./page/verify-account-page/verify-account.page"
 import {ResetPasswordPage} from "./page/reset-password-page/reset-password.page";
 import {ForgotPasswordPage} from "./page/forgot-password-page/forgot-password.page";
 import {SendVerificationCodePage} from "./page/send-verification-code-page/send-verification-code.page";
+import {LoginPage} from "./page/login-page/login.page";
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import {SendVerificationCodePage} from "./page/send-verification-code-page/send-
       {path: 'verify-account', component: VerifyAccountPage},
       {path: 'reset-password', component: ResetPasswordPage},
       {path: 'forgot-password', component: ForgotPasswordPage},
-      {path: 'send-verification-code', component: SendVerificationCodePage}
+      {path: 'send-verification-code', component: SendVerificationCodePage},
+      {path: 'login', component: LoginPage}
     ])
   ],
   exports: [

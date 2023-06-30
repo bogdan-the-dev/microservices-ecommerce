@@ -15,15 +15,13 @@ logging:
 
 
 spring:
-
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   data:
     mongodb:
-      authentication-database: admin
-      username: bogdan
-      password: password
-      database: product_database
-      port: 27017
-      host: localhost
+      uri: mongodb://bogdan:password@localhost:27017/product_database?authSource=admin
       auto-index-creation: true
   application:
     name: product

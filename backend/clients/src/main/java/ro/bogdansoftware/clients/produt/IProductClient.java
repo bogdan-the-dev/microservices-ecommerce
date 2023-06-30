@@ -13,4 +13,5 @@ public interface IProductClient {
 
     @PutMapping("change-inventory-status")
     ResponseEntity<Void> changeInventoryStatus(@RequestParam("id") String id, @RequestParam("status") boolean status);
-    }
+
+}

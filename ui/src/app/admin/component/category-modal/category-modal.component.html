@@ -1,0 +1,44 @@
+<div class="popup-container">
+  <div style="height: 40px">
+    <h3>{{buttonAction + ' Category'}}</h3>
+    <button class="close-button" matTooltip="Cancel" (click)="closeDialog()"><mat-icon>close</mat-icon></button>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill" class="full-width padding">
+      <mat-label>Category Name</mat-label>
+      <input matInput formControlName="name" placeholder="Enter category name">
+      <mat-error *ngIf="form.controls['name'].invalid && form.controls['name'].touched">
+        Category name is required.
+      </mat-error>
+    </mat-form-field>
+
+    <div style="display: flex">
+      <h5>Subcategories</h5>
+      <div class="add-button-container" style="cursor: pointer; margin-left: 5px">
+        <a (click)="addSubcategory()"><mat-icon color="primary">add_circle</mat-icon></a>
+      </div>
+    </div>
+
+    <mat-card class="mat-card">
+      <div formArrayName="subcategories">
+        <div *ngFor="let subcategoryGroup of subcategories.controls; let i = index" class="subcategory-container" [formGroupName]="i">
+          <mat-form-field appearance="fill" style="width: 86%">
+            <mat-label>Subcategory {{ i + 1 }} name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter subcategory name">
+            <mat-error *ngIf="subcategoryGroup.get('name').invalid && subcategoryGroup.get('name').touched">
+              Subcategory name is required.
+            </mat-error>
+          </mat-form-field>
+          <button mat-icon-button color="warn" (click)="removeSubcategory(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+
+    <div>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid" class="submit-button">Create Category</button>
+    </div>
+  </form>
+
+</div>

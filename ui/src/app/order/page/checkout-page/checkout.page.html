@@ -1,0 +1,195 @@
+<div class="container">
+  <h2>Checkout</h2>
+  <!--<div class="checkout-container">
+    <div class="checkout-card">
+      <mat-card>
+        <mat-card-title>Checkout Overview</mat-card-title>
+        <mat-card-content>
+          <div *ngFor="let item of cartItems" class="checkout-item">
+            <img [src]="item.image" alt="Item Image" class="item-image">
+            <div class="item-details">
+              <h4>{{ item.title }}</h4>
+              <p>Price: ${{ item.price }}</p>
+              <p>Quantity: {{ item.quantity }}</p>
+              <p>${{ item.price * item.quantity }}</p>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <div class="total-amount">
+            <h4>Subtotal: ${{ total }}</h4>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div class="details-card">
+      <mat-card>
+        <mat-card-title>User Details</mat-card-title>
+        <mat-card-content>
+          <h3>Delivery Address</h3>
+          &lt;!&ndash; Include the user billing details fields here &ndash;&gt;
+          <h3>Billing Details</h3>
+
+          &lt;!&ndash; Include the delivery address fields here &ndash;&gt;
+
+          <h3>Delivery Method</h3>
+          &lt;!&ndash; Include the delivery method fields here &ndash;&gt;
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="pay-button-container">
+      <button mat-raised-button color="primary">Pay</button>
+
+    </div>
+  </div>-->
+
+  <mat-stepper linear #stepper>
+    <mat-step [stepControl]="billingForm" >
+      <form [formGroup]="billingForm" style="margin-top: 20px">
+        <ng-template matStepLabel>Billing information</ng-template>
+        <div class="input-div-width">
+          <mat-form-field appearance="fill" class="input-fullwidth" >
+            <mat-label>First name</mat-label>
+            <input matInput required formControlName="firstName">
+            <mat-error *ngIf="billingForm.controls['firstName'].invalid">First name is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="input-div-width">
+          <mat-form-field appearance="fill" class="input-fullwidth" >
+            <mat-label>Last name</mat-label>
+            <input matInput required formControlName="lastName">
+            <mat-error *ngIf="billingForm.controls['lastName'].invalid">Last name is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="input-div-width">
+          <mat-form-field appearance="fill" class="input-fullwidth" >
+            <mat-label>Billing address</mat-label>
+            <textarea matInput [rows]="2" style="resize: none" formControlName="address"> </textarea>
+            <mat-error *ngIf="billingForm.controls['address'].invalid">Address is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="input-div-width">
+          <mat-form-field appearance="fill" class="input-fullwidth" >
+            <mat-label>City</mat-label>
+            <input matInput required formControlName="city">
+            <mat-error *ngIf="billingForm.controls['city'].invalid">City is required</mat-error>
+
+          </mat-form-field>
+        </div>
+        <div class="input-div-width">
+          <mat-form-field appearance="fill" class="input-fullwidth" >
+            <mat-label>County</mat-label>
+            <input matInput required formControlName="county">
+            <mat-error *ngIf="billingForm.controls['county'].invalid">County is required</mat-error>
+
+          </mat-form-field>
+        </div>
+
+        <div>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="addressForm">
+      <form [formGroup]="addressForm" style="margin-top: 20px">
+        <ng-template matStepLabel>Delivery information</ng-template>
+        <div>
+          <mat-checkbox (change)="onSameAsBillingToggle($event)" formControlName="same">Same as billing</mat-checkbox>
+        </div>
+        <div class="input-div-width">
+          <mat-form-field class="input-fullwidth" appearance="fill">
+            <mat-label>Phone number</mat-label>
+            <input matInput required formControlName="phone">
+            <mat-error *ngIf="addressForm.controls['phone'].invalid">Phone number is required</mat-error>
+          </mat-form-field>
+        </div>
+
+
+        <div class="input-div-width">
+          <mat-form-field appearance="fill" class="input-fullwidth">
+            <mat-label>First name</mat-label>
+            <input matInput required formControlName="firstName">
+            <mat-error *ngIf="addressForm.controls['firstName'].invalid">First name is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="input-div-width">
+          <mat-form-field appearance="fill" class="input-fullwidth">
+            <mat-label>Last name</mat-label>
+            <input matInput required formControlName="lastName" >
+            <mat-error *ngIf="addressForm.controls['lastName'].invalid">Last name is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="input-div-width">
+          <mat-form-field appearance="fill" class="input-fullwidth">
+            <mat-label>Address</mat-label>
+            <textarea matInput required style="resize: none" rows="2" formControlName="address"> </textarea>
+            <mat-error *ngIf="addressForm.controls['address'].invalid">Address is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="input-div-width">
+          <mat-form-field appearance="fill" class="input-fullwidth">
+            <mat-label>City</mat-label>
+            <input matInput required formControlName="city">
+            <mat-error *ngIf="addressForm.controls['city'].invalid">City is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="input-div-width">
+          <mat-form-field appearance="fill" class="input-fullwidth">
+            <mat-label>County</mat-label>
+            <input matInput required formControlName="county">
+            <mat-error *ngIf="addressForm.controls['county'].invalid">County is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="paymentForm">
+      <form [formGroup]="paymentForm">
+        <ng-template matStepLabel>Payment type</ng-template>
+        <mat-radio-group formControlName="method">
+          <div>
+            <mat-radio-button value="onlineWithCard">
+              Online with Card
+              <span>+ $10</span>
+            </mat-radio-button>
+          </div>
+          <div>
+            <mat-radio-button value="onlineWireTransfer">
+              Online via Wire Transfer
+              <span>+ $5</span>
+            </mat-radio-button>
+          </div>
+          <div>
+            <mat-radio-button value="cashOnDelivery">
+              Cash on Delivery
+              <span>No extra cost</span>
+            </mat-radio-button>
+          </div>
+        </mat-radio-group>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Overview</ng-template>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+    </mat-step>
+  </mat-stepper>
+
+
+
+</div>

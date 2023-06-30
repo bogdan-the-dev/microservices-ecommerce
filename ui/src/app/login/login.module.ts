@@ -18,6 +18,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {ResetPasswordPage} from "./page/reset-password-page/reset-password.page";
 import {VerifyAccountPage} from "./page/verify-account-page/verify-account.page";
 import {SendVerificationCodePage} from "./page/send-verification-code-page/send-verification-code.page";
+import {LoginPage} from "./page/login-page/login.page";
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {SendVerificationCodePage} from "./page/send-verification-code-page/send-
     ForgotPasswordPage,
     ResetPasswordPage,
     VerifyAccountPage,
-    SendVerificationCodePage
+    SendVerificationCodePage,
+    LoginPage
   ],
   imports: [
     CommonModule,

@@ -3,9 +3,16 @@ package ro.bogdansoftware.category;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ro.bogdansoftware.category.dto.CreateCategoryRequestDTO;
+import ro.bogdansoftware.category.dto.UpdateCategoryRequestDTO;
+import ro.bogdansoftware.category.dto.UpdateSubcategoryDTO;
 import ro.bogdansoftware.category.model.Category;
+import ro.bogdansoftware.category.model.Subcategory;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -34,7 +41,31 @@ public class CategoryService {
     }
 
     public void addCategory(CreateCategoryRequestDTO requestDTO) {
-        this.repository.insert(Category.builder().name(requestDTO.name()).build());
+        this.repository.insert(Category.builder()
+                .name(requestDTO.name())
+                .subcategories(requestDTO.subcategories().stream().map(Subcategory::new).collect(Collectors.toList()))
+                .build());
+    }
+
+    public void editCategory(UpdateCategoryRequestDTO requestDTO) {
+        Category category = repository.findById(requestDTO.id()).orElseThrow(() -> new IllegalArgumentException("Invalid category id"));
+        category.setName(requestDTO.name());
+
+        category.getSubcategories().removeIf(elem -> requestDTO.subcategories().stream().noneMatch(requestElem -> Objects.equals(requestElem.id(), elem.getId())));
+
+        List<UpdateSubcategoryDTO> addNew = new LinkedList<>();
+
+        for(UpdateSubcategoryDTO s : requestDTO.subcategories()) {
+            Optional<Subcategory> optionalSubcategory = category.getSubcategories().stream().filter(elem -> Objects.equals(elem.getId(), s.id())).findFirst();
+            if(optionalSubcategory.isPresent()) {
+                optionalSubcategory.get().setName(s.name());
+            } else {
+                addNew.add(s);
+            }
+        }
+        addNew.forEach(elem -> category.getSubcategories().add(new Subcategory(elem.name())));
+
+        repository.save(category);
     }
 
     public String getCategoryIdFromName(String name) {
@@ -42,5 +73,7 @@ public class CategoryService {
         var categoryOptional = this.repository.getCategoryByNameIs(name);
         return  categoryOptional.isPresent() ? categoryOptional.get().getId() : "";
     }
+
+
 
 }

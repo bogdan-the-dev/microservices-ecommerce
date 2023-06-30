@@ -1,0 +1,21 @@
+services:
+  mongodb:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: bogdan
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: client-info_database
+    ports:
+      - "27020:27017"
+    volumes:
+      - mongodb-data:/data/client-info/db
+    networks:
+      - mongodb-network
+
+volumes:
+  mongodb-data:
+
+networks:
+  mongodb-network:
+    driver: bridge

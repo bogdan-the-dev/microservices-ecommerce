@@ -1,4 +1,36 @@
-<button  style="border: none; background-color: white; padding-left: 10px;">
-  <mat-icon [matBadge]="count" matBadgePosition="above after">shopping_cart</mat-icon>
-  Shopping cart
-</button>
+<div *ngIf="count == 0">
+  <button  style="border: none; background-color: white; padding-left: 10px; cursor: default">
+    <mat-icon [matBadge]="count" matBadgePosition="above after">shopping_cart</mat-icon>
+    Shopping cart
+  </button>
+</div>
+<div *ngIf="count > 0" ngbDropdown class="dropdown" #dropdownRef="ngbDropdown">
+  <button  style="border: none; background-color: white; padding-left: 10px;" ngbDropdownToggle class="dropdown-toggle">
+    <mat-icon [matBadge]="count" matBadgePosition="above after">shopping_cart</mat-icon>
+    Shopping cart
+  </button>
+    <ul class="mini-items-list w500" ngbDropdownMenu>
+      <div class="mini-items-wrapper">
+      <li *ngFor="let item of cartItems" class="mini-item">
+        <div class="mini-item-info">
+          <p style="margin-top:0;margin-bottom: 0;">{{item.quantity + 'x'}}</p>
+          <img [src]="item.image" alt="{{ item.title }}" class="mini-item-photo">
+          <div class="mini-item-details">
+<!--
+            <div class="mini-item-quantity">Quantity: {{ item.quantity }}</div>
+-->
+            <div><h5 class="mini-item-title">{{ item.title.substring(0, 80) }}</h5></div>
+          </div>
+        </div>
+        <button class="mini-item-remove-btn" (click)="removeItem(item)">X</button>
+      </li>
+      </div>
+      <li>
+        <div id="total-price">Total price: ${{ total.toFixed(2) }}</div>
+      </li>
+      <li style="display: flex; justify-content: space-evenly">
+        <button class="button-round btn btn-primary" id="place-order-btn" (click)="placeOrder()">Place Order</button>
+        <button class="button-round btn btn-danger" (click)="emptyCart()">Empty cart</button>
+      </li>
+    </ul>
+</div>
