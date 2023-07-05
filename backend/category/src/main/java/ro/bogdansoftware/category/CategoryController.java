@@ -41,13 +41,6 @@ public class CategoryController {
                 );
         }
 
-        @GetMapping("get-category-name")
-        public ResponseEntity<String> getCategoryName(@RequestParam String id) {
-                return ResponseEntity.ok(
-                        //this.service.getCategoryIdFromName(name)
-                ).build();
-        }
-
         @GetMapping("get-category-id")
         public ResponseEntity<String> getCategoryId(@RequestParam("name") String name) {
                 return ResponseEntity.ok(this.service.getCategoryIdFromName(name));

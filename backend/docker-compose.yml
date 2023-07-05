@@ -3,31 +3,13 @@ version: '3.0'
 networks:
   spring:
     driver: bridge
-  product-database-network:
-    driver: bridge
-  security-database-network:
-    driver: bridge
-  review-database-network:
-    driver: bridge
-  promotion-database-network:
-    driver: bridge
-  category-database-network:
-    driver: bridge
-  cart-persistence-database-network:
-    driver: bridge
-  inventory-database-network:
-    driver: bridge
-  order-database-network:
-    driver: bridge
-
-
 
 services:
   zipkin:
     image: openzipkin/zipkin
     container_name: zipkin
     ports:
-      - 9411:9411
+      - "9411:9411"
     networks:
       - spring
 
@@ -48,12 +30,11 @@ services:
     depends_on:
       - apigw
     networks:
-      - product-database-network
       - spring
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  product_db:
+  product-db:
     image: mongo:latest
     restart: always
     environment:
@@ -65,7 +46,7 @@ services:
     volumes:
       - product-db-data:/data/product/db
     networks:
-      - product-database-network
+      - spring
 
   security:
     image: bogdantamba/security:latest
@@ -75,7 +56,6 @@ services:
       - security-database
     networks:
       - spring
-      - security-database-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     ports:
@@ -93,7 +73,7 @@ services:
     volumes:
       - security-db-data:/data/security/db
     networks:
-      - security-database-network
+      - spring
 
   review:
     image: bogdantamba/review:latest
@@ -103,7 +83,6 @@ services:
       - review-database
     networks:
       - spring
-      - review-database-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     ports:
@@ -115,7 +94,7 @@ services:
     ports:
       - "27021:27021"
     networks:
-      - review-database-network
+      - spring
     volumes:
       - review-db-data:/data/review/db
     environment:
@@ -146,8 +125,8 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
-      - promotion-database-network
-
+    ports:
+      - "8118:8118"
   promotion-database:
     image: mongo:latest
     container_name: promotion-database
@@ -161,7 +140,7 @@ services:
     volumes:
       - promotion-db-data:/data/review/db
     networks:
-      - promotion-database-network
+      - spring
 
   notification:
     image: bogdantamba/notification:latest
@@ -175,6 +154,10 @@ services:
       - spring
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8110:8110" 
+      
+      
   apigw:
     image: bogdantamba/apigw:latest
     container_name: apigw
@@ -200,7 +183,8 @@ services:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/resources/just-palace-389214-4e5e3520dc7f.json
     networks:
       - spring
-
+    ports:
+      - "8335:8335"
   category:
     image: bogdantamba/category:latest
     container_name: category
@@ -213,7 +197,8 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
-      - category-database-network
+    ports:
+      - "8010:8010"
 
   category-database:
     image: mongo:latest
@@ -228,7 +213,7 @@ services:
     volumes:
       - category-db-data:/data/review/db
     networks:
-      - category-database-network
+      - spring
 
   cart-persistence:
     image: bogdantamba/cart-persistence:latest
@@ -237,13 +222,12 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
-      - cart-persistence-database-network
     depends_on:
-      - cart-persistence-database
       - zipkin
       - apigw
       - eureka-server
-
+    ports:
+      - "8256:8256"
   cart-persistence-database:
     image: redis
     container_name: cart-persistence-database
@@ -253,7 +237,7 @@ services:
     volumes:
       - cart-persistence-db-data:/data/cart-persistence/db
     networks:
-      - cart-persistence-database-network
+      - spring
 
   inventory:
     image: bogdantamba/inventory:latest
@@ -262,13 +246,15 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
-      - inventory-database-network
     depends_on:
       - zipkin
       - apigw
       - eureka-server
-      - inventory-database
+    links:
+    - inventory-database
 
+    ports:
+      - "8056:8056"
   inventory-database:
     image: redis
     container_name: inventory-database
@@ -278,7 +264,7 @@ services:
     volumes:
       - inventory-db-data:/data/inventory/db
     networks:
-      - inventory-database-network
+      - spring
 
 
 volumes:

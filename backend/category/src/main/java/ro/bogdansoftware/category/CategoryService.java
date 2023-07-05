@@ -58,6 +58,9 @@ public class CategoryService {
         for(UpdateSubcategoryDTO s : requestDTO.subcategories()) {
             Optional<Subcategory> optionalSubcategory = category.getSubcategories().stream().filter(elem -> Objects.equals(elem.getId(), s.id())).findFirst();
             if(optionalSubcategory.isPresent()) {
+
+                //todo send request to change the subcategory name on the products
+
                 optionalSubcategory.get().setName(s.name());
             } else {
                 addNew.add(s);

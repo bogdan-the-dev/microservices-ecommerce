@@ -17,7 +17,6 @@ public class Category {
     private String id;
     private String name;
     private List<Subcategory> subcategories;
-    private List<String> tags;
 
     public Category() {
     }
