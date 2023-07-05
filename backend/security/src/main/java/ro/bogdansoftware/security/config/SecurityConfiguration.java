@@ -43,35 +43,13 @@ public class SecurityConfiguration {
                     req.requestMatchers(antMatcher("/api/v1/auth/**")).permitAll();
                     req.anyRequest().authenticated();
                 })
-/*
-                .authorizeHttpRequests()
-                .requestMatchers(antMatcher("/")).permitAll()
-                .requestMatchers(antMatcher("/error")).permitAll()
-                .requestMatchers("/error").permitAll()
-                .anyRequest().permitAll()
-                //.requestMatchers("**").permitAll()
-                .and()
-*/
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-
         return http.build();
     }
-
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(List.of("https://localhost:4200", "http://localhost:4200/", "**"));
-//        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS", "HEAD", "CONNECT", "TRACE"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        configuration.setAllowCredentials(true);
-//        return source;
-//    }
-
 }
 

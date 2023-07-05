@@ -32,6 +32,17 @@ public class SecurityService {
     private final RabbitMQMessageProducer rabbitMQMessageProducer;
     private final UserDetailsService detailsService;
 
+    public void createAdmin(RegisterRequestDTO requestDTO) {
+        var user = ApplicationUser.builder()
+                .email(requestDTO.email())
+                .passwordHash(passwordEncoder.encode(requestDTO.password()))
+                .role(UserRole.ADMIN)
+                .confirmed(true)
+                .createdAt(LocalDateTime.now())
+                .build();
+        userRepository.save(user);
+    }
+
     public boolean register(RegisterRequestDTO requestDTO) {
         if (!EmailValidator.isValidEmail(requestDTO.email())) {
            throw new AccountCreationException("Invalid email.");
@@ -135,6 +146,11 @@ public class SecurityService {
         var authorities = detailsService.loadUserByUsername(email).getAuthorities();
         UserRole role = UserRole.getUSerRole(String.valueOf(authorities.stream().toList().get(0)));
         return role.name();
+    }
+
+    public boolean userExists(String email) {
+        var userOptional = userRepository.findByEmailIs(email);
+        return userOptional.isPresent();
     }
 
     public String getUsername(String jwtToken) {

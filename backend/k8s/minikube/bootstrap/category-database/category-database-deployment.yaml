@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: category-database
+  name: category-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: category-database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/backend-spring: "true"
+        io.kompose.service: category-database
+    spec:
+      containers:
+        - args:
+            - mongod
+            - --port
+            - "27018"
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: category_database
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: password
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: bogdan
+          image: mongo:latest
+          name: category-database
+          ports:
+            - containerPort: 27018
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/review/db
+              name: category-db-data
+      restartPolicy: Always
+      volumes:
+        - name: category-db-data
+          persistentVolumeClaim:
+            claimName: category-db-data
+status: {}

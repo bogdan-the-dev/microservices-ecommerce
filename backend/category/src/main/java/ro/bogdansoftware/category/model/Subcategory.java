@@ -16,7 +16,6 @@ import java.util.UUID;
 public class Subcategory {
     private String id;
     private String name;
-    private List<String> tags;
 
     public Subcategory(String name) {
         this.id = ObjectId.get().toString();
