@@ -37,6 +37,22 @@ export class ProductsService {
     return this.http.put(ProductApiUrls.editProduct, product)
   }
 
+  deleteProduct(productIds: string[]) {
+    return this.http.put(ProductApiUrls.deleteProduct, productIds)
+  }
+
+  enableProducts(productsId: string[]) {
+    return this.http.put(ProductApiUrls.enableProduct, productsId)
+  }
+
+  disableProducts(productsId: string[]) {
+    return this.http.put(ProductApiUrls.disableProduct, productsId)
+  }
+
+  changeCategory(productIds: string[], category: string, subcategory: string) {
+    return this.http.put(ProductApiUrls.changeCategory, {ids: productIds, category: category, subcategory: subcategory})
+  }
+
   private convertToFormData(product: CreateProductModel) {
     const formData = new FormData()
     formData.append('id', product.id)

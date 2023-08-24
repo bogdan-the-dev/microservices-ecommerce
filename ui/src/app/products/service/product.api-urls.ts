@@ -10,4 +10,7 @@ export class ProductApiUrls {
   static editProduct = ProductApiUrls.baseProductUrl + '/edit'
   static deleteProduct = ProductApiUrls.baseProductUrl + '/delete'
   static getProductForCart = ProductApiUrls.baseProductUrl + '/get-product-cart'
+  static enableProduct = ProductApiUrls.baseProductUrl + '/enable'
+  static disableProduct = ProductApiUrls.baseProductUrl + '/disable'
+  static changeCategory = ProductApiUrls.baseProductUrl + '/change-category'
 }

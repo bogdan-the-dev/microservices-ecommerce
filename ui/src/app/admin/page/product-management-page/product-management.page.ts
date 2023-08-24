@@ -5,6 +5,9 @@ import {ProductsService} from "../../../products/service/products.service";
 import {MatDialog} from "@angular/material/dialog";
 import {Sort} from "@angular/material/sort";
 import {ProductModalComponent} from "../../component/product-modal/product-modal.component";
+import {
+  ProductSetCategoryModalComponent
+} from "../../component/product-set-category-modal/product-set-category-modal.component";
 
 @Component({
   selector: 'app-product-management.page',
@@ -63,8 +66,31 @@ export class ProductManagementPage implements OnInit{
 
   }
 
-  onDelete() {
+  onEnable() {
+    this.productService.enableProducts(this.selection.selected.map(elem => elem.id)).subscribe(_ => {
+      this.onRefresh();
+    })
+  }
 
+  onDisable() {
+    this.productService.disableProducts(this.selection.selected.map(elem => elem.id)).subscribe(_ => {
+      this.onRefresh();
+    })
+  }
+
+  onDelete() {
+    this.productService.deleteProduct(this.selection.selected.map(elem => elem.id)).subscribe(_ => {
+      this.onRefresh();
+    })
+  }
+
+  onCategoryChange() {
+    const dialogRef = this.dialog.open(ProductSetCategoryModalComponent, {
+      width: '600px',
+      data: {
+        ids: this.selection.selected.map(elem => elem.id)
+      }
+    })
   }
 
   onRefresh() {
@@ -72,6 +98,12 @@ export class ProductManagementPage implements OnInit{
       this.products = res
       this.applyFilter()
     })
+    this.selection.clear()
+  }
+
+  allSelectionSameValue(desired: boolean) {
+    const initialNumber = this.selection.selected.length
+    return this.selection.selected.filter(s => s.isEnabled == desired).length == initialNumber
   }
 
   sortData(sort: Sort) {

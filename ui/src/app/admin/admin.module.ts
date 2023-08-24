@@ -25,6 +25,9 @@ import {ProductModalComponent} from "./component/product-modal/product-modal.com
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import {DragDropModule} from "@angular/cdk/drag-drop";
+import {
+  ProductSetCategoryModalComponent
+} from "./component/product-set-category-modal/product-set-category-modal.component";
 
 
 
@@ -37,7 +40,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     CategoryPage,
     CategoryModalComponent,
     ProductManagementPage,
-    ProductModalComponent
+    ProductModalComponent,
+    ProductSetCategoryModalComponent
   ],
   imports: [
     CommonModule,

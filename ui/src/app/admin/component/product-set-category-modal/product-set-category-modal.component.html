@@ -1,0 +1,29 @@
+<div class="popup-container">
+
+  <div style="height: 40px">
+    <h3>Change Category</h3>
+    <button class="close-button" matTooltip="Cancel" (click)="closeDialog()"><mat-icon>close</mat-icon></button>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category" (selectionChange)="onCategoryChange($event.value)">
+          <mat-option *ngFor="let cat of categories" [value]="cat">{{ cat.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.controls['category'].invalid">Category is required</mat-error>
+
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Subcategory</mat-label>
+        <mat-select formControlName="subcategory" [disabled]="disableSubcategory">
+          <mat-option *ngFor="let subcategory of subcategoryOptions" [value]="subcategory">{{ subcategory.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.controls['subcategory'].invalid">Subcategory is required</mat-error>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
+  </form>
+</div>

@@ -9,7 +9,7 @@ management:
       type: w3c
   zipkin:
     tracing:
-      endpoint: http://zipkin:9411
+      endpoint: http://zipkin:9411/api/v2/spans
 
 logging:
   pattern:
@@ -23,7 +23,7 @@ spring:
       max-request-size: 10MB
   data:
     mongodb:
-      uri: mongodb://bogdan:password@product_db:27017/product_database?authSource=admin
+      uri: mongodb://bogdan:password@product-db:27017/product_database?authSource=admin
       auto-index-creation: true
   application:
     name: product

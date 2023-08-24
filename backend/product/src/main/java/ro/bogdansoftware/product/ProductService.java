@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
@@ -130,7 +131,7 @@ public class ProductService {
 
         HashSet<String> dtoPhotos = new HashSet<>(requestDTO.photos());
 
-        List<String> photoForDeletion = product.getPhotos().stream().filter(dtoPhotos::contains).collect(Collectors.toList());
+        List<String> photoForDeletion = product.getPhotos().stream().filter(Predicate.not(dtoPhotos::contains)).collect(Collectors.toList());
         List<String> newPhotos = requestDTO.photos().stream().filter(elem -> elem.contains("base64")).collect(Collectors.toList());
 
         Queue<String> newUrls = new LinkedList<>();
@@ -138,7 +139,7 @@ public class ProductService {
         try {
             fileClient.deletePhotos(new PhotoDeleteDTO(product.getId(), photoForDeletion));
             var res = fileClient.uploadPhotos(new PhotoUploadDTO(product.getId(), newPhotos));
-            if(res.getStatusCode().value() == 201) {
+            if(res.getStatusCode().value() == 200) {
                 newUrls = new LinkedList<>(res.getBody());
             }
         } catch (MalformedURLException ex) {
@@ -148,7 +149,7 @@ public class ProductService {
         }
         LinkedList<String> productPhotos = new LinkedList<>();
         for(String photo: requestDTO.photos()) {
-            if (photo.contains("storage.googleapis.com/photo-storage-bucket")) {
+            if (photo.contains("storage.googleapis.com/download/storage/v1/b/photo-storage-bucket")) {
                 productPhotos.add(photo);
             } else {
                 productPhotos.add(newUrls.poll());
@@ -165,7 +166,7 @@ public class ProductService {
             Product p = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid product id"));
 
             try {
-                fileClient.deletePhotos(new PhotoDeleteDTO(id, p.getPhotos()));
+                fileClient.deletePhotos(new PhotoDeleteDTO(id, p.getPhotos().stream().filter(Objects::nonNull).collect(Collectors.toList())));
             } catch (MalformedURLException ex) {
                 throw new RuntimeException("Error deleting the unused photos");
             }

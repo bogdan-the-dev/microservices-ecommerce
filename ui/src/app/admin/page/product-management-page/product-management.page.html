@@ -12,13 +12,13 @@
       <mat-icon>ballot</mat-icon>
     </button>
 
-    <button mat-icon-button color="primary" matTooltip="Change category" [disabled]="selection.selected.length < 1">
+    <button mat-icon-button color="primary" matTooltip="Change category" [disabled]="selection.selected.length < 1" (click)="onCategoryChange()">
       <mat-icon>category</mat-icon>
     </button>
-    <button mat-icon-button color="primary" matTooltip="Enable" [disabled]="selection.selected.length < 1">
+    <button mat-icon-button color="primary" matTooltip="Enable" [disabled]="selection.selected.length < 1 && allSelectionSameValue(true)" (click)="onEnable()">
       <mat-icon>check_circle</mat-icon>
     </button>
-    <button mat-icon-button color="primary" matTooltip="Disable" [disabled]="selection.selected.length < 1">
+    <button mat-icon-button color="primary" matTooltip="Disable" [disabled]="selection.selected.length < 1 && allSelectionSameValue(false)" (click)="onDisable()">
       <mat-icon>cancel</mat-icon>
     </button>
 
