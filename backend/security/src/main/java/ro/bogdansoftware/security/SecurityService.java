@@ -14,11 +14,13 @@ import ro.bogdansoftware.security.dto.AuthenticationRequestDTO;
 import ro.bogdansoftware.security.dto.AuthenticationResponseDTO;
 import ro.bogdansoftware.security.dto.RegisterRequestDTO;
 import ro.bogdansoftware.security.exception.AccountCreationException;
+import ro.bogdansoftware.security.model.AdminUser;
 import ro.bogdansoftware.security.model.ApplicationUser;
 import ro.bogdansoftware.security.model.UserRole;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +39,7 @@ public class SecurityService {
                 .email(requestDTO.email())
                 .passwordHash(passwordEncoder.encode(requestDTO.password()))
                 .role(UserRole.ADMIN)
+                .username(requestDTO.username())
                 .confirmed(true)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -146,6 +149,33 @@ public class SecurityService {
         var authorities = detailsService.loadUserByUsername(email).getAuthorities();
         UserRole role = UserRole.getUSerRole(String.valueOf(authorities.stream().toList().get(0)));
         return role.name();
+    }
+
+    public List<AdminUser> getAdmins() {
+        return userRepository.findApplicationUsersByRoleIs(UserRole.ADMIN).stream().map(AdminUser::Convert).collect(Collectors.toList());
+    }
+
+    public void disable(List<String> usernames) {
+        for(String username: usernames) {
+            var user = userRepository.findByUsernameIs(username).orElseThrow();
+            user.setDisabled(true);
+            userRepository.save(user);
+        }
+    }
+
+    public void enable(List<String> usernames) {
+        for(String username: usernames) {
+            var user = userRepository.findByUsernameIs(username).orElseThrow();
+            user.setDisabled(false);
+            userRepository.save(user);
+        }
+    }
+
+    public void deleteAdmin(List<String> usernames) {
+        for(String username: usernames) {
+            var user = userRepository.findByUsernameIs(username).orElseThrow();
+            userRepository.delete(user);
+        }
     }
 
     public boolean userExists(String email) {

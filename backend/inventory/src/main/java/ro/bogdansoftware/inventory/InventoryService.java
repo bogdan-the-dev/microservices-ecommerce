@@ -1,16 +1,16 @@
 package ro.bogdansoftware.inventory;
 
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 import ro.bogdansoftware.clients.inventory.InventoryDTO;
-import ro.bogdansoftware.clients.inventory.ListOfInventoryItemsDTO;
+import ro.bogdansoftware.clients.product.IProductClient;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -19,7 +19,7 @@ public class InventoryService {
     private final RedisTemplate<String, Integer> redisTemplate;
     private final static Log log = LogFactory.getLog(InventoryService.class);
 
-    private final static int PAGE_SIZE = 20;
+    private final IProductClient productClient;
 
     public Integer getAvailableQuantity(String id) {
         var res = redisTemplate.opsForHash().get("Inventory", id);
@@ -41,9 +41,14 @@ public class InventoryService {
 
 
     public void modifyInventory(String id, int quantity) {
+        int actualQuantity = (int) redisTemplate.opsForHash().get("Inventory", id);
         if(quantity == 0) {
+            productClient.changeInventoryStatus(id,false);
             //todo send notification to disable product
             //todo send notification to department that stock is empty
+        }
+        else if(actualQuantity == 0 && quantity > 0) {
+            productClient.changeInventoryStatus(id, true);
         }
         redisTemplate.execute(new SessionCallback<Object>() {
             @Override
@@ -106,9 +111,24 @@ public class InventoryService {
         redisTemplate.opsForHash().delete("Inventory", id);
     }
 
-    public ListOfInventoryItemsDTO getAllInventory(int pageNr) {
-        LinkedHashMap<String, Integer> items = new LinkedHashMap<>();
-        throw new NotImplementedException("get all inventory");
+    public List<InventoryItemDTO> getAllInventory() {
+        Set<Object> ids = redisTemplate.opsForHash().keys("Inventory");
+        List<InventoryItemDTO> items = new ArrayList<>();
+        for(Object id :  ids) {
+            InventoryItemDTO item = new InventoryItemDTO();
+            item.setProductId(id.toString());
+            item.setQuantity((Integer) redisTemplate.opsForHash().get("Inventory", id));
+            items.add(item);
+        }
+
+        List<String> itemIds = items.stream().map(InventoryItemDTO::getProductId).collect(Collectors.toList());
+        List<String> names = productClient.getProductNames(itemIds).getBody();
+        for(InventoryItemDTO item : items) {
+            item.setProductName(names.get(0));
+            names.remove(0);
+        }
+
+        return items;
     }
 
 }

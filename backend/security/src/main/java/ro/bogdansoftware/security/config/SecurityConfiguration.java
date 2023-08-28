@@ -41,7 +41,8 @@ public class SecurityConfiguration {
                 .disable()
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(antMatcher("/api/v1/auth/**")).permitAll();
-                    req.anyRequest().authenticated();
+                    //req.requestMatchers(antMatcher("/api/v1/security/**")).hasRole("ADMIN");
+                   // req.anyRequest().authenticated();
                 })
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -18,4 +18,7 @@ export class AdminApiUrls {
   static readonly editCategory = AdminApiUrls.categoryBase + '/edit-category'
   static readonly deleteCategory = AdminApiUrls.categoryBase + '/delete-category'
 
+  static readonly inventoryBase = ApiUrls.serverUrl + '/api/v1/inventory'
+  static readonly getInventory = AdminApiUrls.inventoryBase + '/get-all'
+  static readonly editInventory = AdminApiUrls.inventoryBase + '/modify-inventory'
 }

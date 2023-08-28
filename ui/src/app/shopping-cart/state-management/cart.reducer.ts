@@ -70,7 +70,7 @@ export function CartReducer (state = cartState, action: ActionWithPayload) {
     case CartAction.SAVE_ONLINE: {
       const newState = {...state}
       newState.saveOnline = action.payload
-      return state
+      return newState
     }
 
     default: {

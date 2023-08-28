@@ -1,0 +1,33 @@
+<div class="popup-container">
+  <div style="height: 40px">
+    <h3>Create admin account</h3>
+    <button class="close-button" matTooltip="Cancel" (click)="closeDialog()"><mat-icon>close</mat-icon></button>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <mat-form-field class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" type="username">
+        <mat-error *ngIf="form.controls['username']?.invalid && form.controls['username']?.touched">Username is required</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email">
+        <mat-error *ngIf="form.controls['email']?.invalid && form.controls['email']?.touched">A valid email is required</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="showPassword? 'text' : 'password'" type="password" formControlName="password">
+        <mat-icon matSuffix (click)="onToggle()">{{showPassword?'visibility_off':'visibility'}}</mat-icon>
+        <mat-error *ngIf="form.controls['password']?.invalid && form.controls['password']?.touched">Password is required</mat-error>
+      </mat-form-field>
+    </div>
+    <button mat-stroked-button class="full submit-button" [disabled]="form.invalid">Register</button>
+    <mat-error *ngIf="error.length > 0"><span>{{error}}</span></mat-error>
+  </form>
+
+</div>

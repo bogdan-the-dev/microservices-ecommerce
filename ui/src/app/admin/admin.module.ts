@@ -28,6 +28,12 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import {
   ProductSetCategoryModalComponent
 } from "./component/product-set-category-modal/product-set-category-modal.component";
+import {CreateAdminAccountPage} from "./page/create-admin-account/create-admin-account.page";
+import {InventoryManagementPage} from "./page/inventory-management-page/inventory-management.page";
+import {OrderManagementPage} from "./page/order-management-page/order-management.page";
+import {RevenuesPage} from "./page/revenues/revenues.page";
+import {CreateAdminModalComponent} from "./component/create-admin-account-modal/create-admin-modal.component";
+import {EditInventoryModalComponent} from "./component/edit-Inventory-modal/edit-Inventory-modal.component";
 
 
 
@@ -41,7 +47,13 @@ import {
     CategoryModalComponent,
     ProductManagementPage,
     ProductModalComponent,
-    ProductSetCategoryModalComponent
+    ProductSetCategoryModalComponent,
+    CreateAdminAccountPage,
+    InventoryManagementPage,
+    OrderManagementPage,
+    RevenuesPage,
+    CreateAdminModalComponent,
+    EditInventoryModalComponent
   ],
   imports: [
     CommonModule,

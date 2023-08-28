@@ -12,7 +12,7 @@
       <li><a class="default-a" routerLink="/send-verification-code" (click)="dropdownRef.close()">Send verification code</a></li>
     </div>
     <div *ngIf="isAuthenticated" class="container">
-      <li><a>Account details</a></li>
+      <li><a class="default-a" (click)="dropdownRef.close()">My orders</a></li>
       <li><a class="default-a" (click)="onLogout(); dropdownRef.close()">Logout</a></li>
     </div>
   </ul>

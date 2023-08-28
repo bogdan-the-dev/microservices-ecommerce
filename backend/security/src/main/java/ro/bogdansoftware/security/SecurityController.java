@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.bogdansoftware.security.dto.*;
+import ro.bogdansoftware.security.model.AdminUser;
 import ro.bogdansoftware.shared.security.InternalAuthResponse;
 import ro.bogdansoftware.shared.security.SecurityURLS;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(SecurityURLS.SECURITY_BASE)
@@ -65,5 +68,34 @@ public class SecurityController {
         return ResponseEntity.ok(new InternalAuthResponse(username, role));
         /*response.setHeader("auth-user-role", role);
         return ResponseEntity.ok().build();*/
+    }
+
+    @PostMapping(value = "security/register-admin")
+    public ResponseEntity<Void> registerAdmin(@RequestBody RegisterRequestDTO requestDTO) {
+        service.createAdmin(requestDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "security/enable")
+    public ResponseEntity<Void> enableAdmin(@RequestBody List<String> username) {
+        service.enable(username);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "security/disable")
+    public ResponseEntity<Void> disableAdmin(@RequestBody List<String> username) {
+        service.disable(username);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "security/delete")
+    public ResponseEntity<Void> deleteAdmin(@RequestBody List<String> username) {
+        service.deleteAdmin(username);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "security/get")
+    public ResponseEntity<List<AdminUser>> get() {
+        return ResponseEntity.ok(service.getAdmins());
     }
 }

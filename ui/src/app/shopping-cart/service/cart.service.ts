@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {ItemCartModel} from "../model/item-cart.model";
 import * as http from "http";
 import {CartApiUrls} from "./cart.api-urls";
+import {CartResponseMotel} from "../model/cart-response.motel";
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +54,7 @@ export class CartService {
   }
 
   getCart() {
-    return this.http.get<{itemId: string, quantity: number}[]>(CartApiUrls.getCart)
+    return this.http.get<CartResponseMotel[]>(CartApiUrls.getCart)
   }
 
   getCartLocally() {

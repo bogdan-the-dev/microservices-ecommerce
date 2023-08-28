@@ -72,6 +72,11 @@ public class ProductController {
                 ));
     }
 
+    @PutMapping("get-product-names")
+    public ResponseEntity<List<String>> getProductNames(@RequestBody List<String> ids) {
+        return ResponseEntity.ok(productService.getProductNames(ids));
+    }
+
     @PutMapping("get-product-cart")
     public ResponseEntity<List<CartProductDTO>> getProductForCart(@RequestBody List<String> ids) {
         return ResponseEntity.ok(productService.getProductForCart(ids));

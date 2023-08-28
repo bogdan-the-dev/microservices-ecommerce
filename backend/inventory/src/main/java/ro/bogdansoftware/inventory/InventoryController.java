@@ -7,6 +7,7 @@ import ro.bogdansoftware.clients.inventory.InventoryDTO;
 import ro.bogdansoftware.clients.inventory.ListOfInventoryItemsDTO;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -44,9 +45,9 @@ public class InventoryController {
     }
 
     @GetMapping("get-all")
-    public ResponseEntity<Void> getAll(@RequestParam(value = "page") int pageNr) {
-        inventoryService.getAllInventory(pageNr);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<List<InventoryItemDTO>> getAll() {
+        var res = inventoryService.getAllInventory();
+        return ResponseEntity.ok(res);
     }
 
 }

@@ -17,6 +17,7 @@ public class Configuration {
                 .route("category", r -> r.path("/api/v1/category/**").uri("lb://CATEGORY"))
                 .route("inventory", r -> r.path("/api/v1/inventory/**").uri("lb://INVENTORY"))
                 .route("security", r -> r.path("/api/v1/auth/**").uri("lb://SECURITY"))
+                .route("security-admin", r -> r.path("/api/v1/security/**").uri("lb://SECURITY"))
                 .route("order", r -> r.path("/api/v1/order/**")
                         .filters(f -> f.filter(authFilter.apply(new AuthenticationPrefilter.Config())))
                         .uri("lb://ORDER"))

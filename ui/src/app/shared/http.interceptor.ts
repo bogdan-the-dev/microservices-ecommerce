@@ -17,7 +17,7 @@ export class AddHeaderInterceptor  implements HttpInterceptor {
     })
   }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if(this.token == undefined || this.token == '') {
+    if(this.token == undefined || this.token == '' || req.url.includes('authenticate')) {
       return next.handle(req)
     }
     const clone = req.clone({headers: req.headers.append('Authorization', 'Bearer ' + this.token)})

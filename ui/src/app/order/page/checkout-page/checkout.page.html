@@ -86,7 +86,7 @@
         </div>
 
         <div>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button matStepperNext [disabled]="billingForm.invalid">Next</button>
         </div>
       </form>
     </mat-step>
@@ -142,8 +142,11 @@
           </mat-form-field>
         </div>
         <div>
+          <mat-checkbox formControlName="notifyViaSMS">Notify me also by SMS</mat-checkbox>
+        </div>
+        <div>
           <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button matStepperNext [disabled]="addressForm.invalid" >Next</button>
         </div>
       </form>
     </mat-step>
@@ -155,7 +158,6 @@
           <div>
             <mat-radio-button value="onlineWithCard">
               Online with Card
-              <span>+ $10</span>
             </mat-radio-button>
           </div>
           <div>
@@ -167,13 +169,12 @@
           <div>
             <mat-radio-button value="cashOnDelivery">
               Cash on Delivery
-              <span>No extra cost</span>
             </mat-radio-button>
           </div>
         </mat-radio-group>
         <div>
           <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button matStepperNext [disabled]="paymentForm.invalid">Next</button>
         </div>
       </form>
     </mat-step>

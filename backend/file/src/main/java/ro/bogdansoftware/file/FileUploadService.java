@@ -46,7 +46,7 @@ public class FileUploadService {
             MockMultipartFile file = Base64Converter.convertToFile(photo, "photo-" + i);
             i++;
             String filename = file.getOriginalFilename();
-            String bucketName = "photo-storage-bucket";
+            String bucketName = "product-photo-storage-bucket";
             String filePath = id + "/" + filename;
 
             BlobId blobId = BlobId.of(bucketName, filePath);

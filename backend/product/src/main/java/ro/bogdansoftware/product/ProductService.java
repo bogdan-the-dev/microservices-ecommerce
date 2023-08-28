@@ -268,6 +268,15 @@ public class ProductService {
         return new PreviewDTO(productPreviewDTOS, getProductNumber(filters));
     }
 
+    public List<String> getProductNames(List<String> ids) {
+        List<String> names = new ArrayList<>(ids.size());
+
+        for(String id : ids) {
+            names.add(productRepository.findById(id).orElseThrow().getTitle());
+        }
+        return names;
+    }
+
     private int getProductNumber(List<ProductFilter> filters) {
         Criteria criteria = getCriteria(filters);
         return mongoTemplate.find(new Query(criteria), Product.class).size();

@@ -3,6 +3,7 @@ import {BaseComponent} from "../base-component/base-component";
 import {select, Store} from "@ngrx/store";
 import {filter} from "rxjs";
 import {LoginAction} from "../../../login/state-management/login.action";
+import {CartAction} from "../../../shopping-cart/state-management/cart.action";
 
 @Component({
   selector: 'app-account-mini',
@@ -37,6 +38,7 @@ export class AccountMiniComponent extends BaseComponent{
 
   onLogout() {
     this.store.dispatch({type: LoginAction.LOGOUT, payload: {}})
+    this.store.dispatch({type: CartAction.SAVE_ONLINE, payload: false})
   }
 
 }

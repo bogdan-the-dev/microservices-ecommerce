@@ -56,7 +56,8 @@ export class CheckoutPage extends BaseComponent{
       'lastName': new FormControl('', Validators.required),
       'address': new FormControl('', Validators.required),
       'city': new FormControl('', Validators.required),
-      'county': new FormControl('', Validators.required)
+      'county': new FormControl('', Validators.required),
+      'notifyViaSMS': new FormControl()
     })
 
     this.paymentForm = new FormGroup({

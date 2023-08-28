@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {LoginApiUrls} from "./login.api-urls";
 import {LoginAction} from "../state-management/login.action";
+import {AdminAccountGridModel} from "../../admin/model/admin-account-grid.model";
 
 
 @Injectable({
@@ -32,5 +33,24 @@ export class LoginService {
   }
   RecoverState(token: string) {
     return this.http.get(LoginApiUrls.recoverState + '?token=' + token)
+  }
+
+  RegisterAdmin(username: string, email: string, password: string) {
+    return this.http.post(LoginApiUrls.registerAdmin, {username: username, email: email, password: password})
+  }
+
+  EnableAdmin(username: string[]) {
+    return this.http.put(LoginApiUrls.enableAdmin, username)
+  }
+
+  DisableAdmin(username: string[]) {
+    return this.http.put(LoginApiUrls.disableAdmin, username)
+  }
+
+  DeleteAdmin(username: string[]) {
+    return this.http.put(LoginApiUrls.deleteAdmin, username)
+  }
+  GetAdmins() {
+    return this.http.get<AdminAccountGridModel[]>(LoginApiUrls.getAdmin)
   }
 }

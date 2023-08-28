@@ -6,6 +6,7 @@ import {LoginAction} from "../../state-management/login.action";
 import {filter} from "rxjs";
 import {AuthRedirectService} from "../../../shared/service/auth-redirect.service";
 import {Router} from "@angular/router";
+import {CartAction} from "../../../shopping-cart/state-management/cart.action";
 
 @Component({
   selector: 'app-login-form',
@@ -39,12 +40,10 @@ export class LoginFormComponent extends BaseComponent implements OnInit{
         filter(s => s !== undefined)
       ).subscribe(loginSuccess => {
         if(loginSuccess) {
+          this.store.dispatch({type: CartAction.SAVE_ONLINE, payload: true})
           const redirectUrl = this.authRedirectService.getRedirectUrl()
-          if(redirectUrl != undefined || redirectUrl != null || redirectUrl !== '') {
+          if (redirectUrl != null) {
             this.navigate(redirectUrl)
-          }
-          else {
-            this.navigate('')
           }
         }
       })

@@ -83,10 +83,13 @@ export class ProductComponent extends BaseComponent implements OnInit{
     this.productService.getProduct(this.productId)
       .subscribe(res => {
         this.product = res
+        this.parseVariations()
       })
-    this.parseVariations()
   }
   private parseVariations() {
+    if(this.product.variation == null) {
+      return;
+    }
     this.product.variation.forEach((variationOption, variationName) => {
       let arr: [string, string][] = []
       variationOption.forEach((option, link) => {
