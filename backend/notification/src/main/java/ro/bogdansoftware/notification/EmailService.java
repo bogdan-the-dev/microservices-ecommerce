@@ -23,7 +23,7 @@ public class EmailService implements EmailSender{
             helper.setSubject(subject);
             helper.setText(email, true);
             helper.setTo(to);
-            helper.setFrom("no-reply@bogdangroup.ro");
+            helper.setFrom("everything.online.office@gmail.com");
             mailSender.send(mimeMessage);
         }catch (MessagingException e) {
             throw new IllegalStateException("Failed to send mail");

@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {ProductPreviewModel} from "../../model/product-preview.model";
 import {ItemCartModel} from "../../../shopping-cart/model/item-cart.model";
 import {CartAction} from "../../../shopping-cart/state-management/cart.action";
@@ -9,11 +9,21 @@ import {Store} from "@ngrx/store";
   templateUrl: 'product-overview.component.html',
   styleUrls: ['product-overview.component.less']
 })
-export class ProductOverviewComponent {
+export class ProductOverviewComponent implements OnInit{
   @Input() product: ProductPreviewModel
 
   constructor(private store: Store<any>) {
   }
+
+  ngOnInit() {
+    console.log(this.product)
+
+  }
+
+  hasPromo(): boolean {
+    return this.product.promo !== null
+  }
+
   get promoLabel(): string {
     return this.product.promo?.name
   }

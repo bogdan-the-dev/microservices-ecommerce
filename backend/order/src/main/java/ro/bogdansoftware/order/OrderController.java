@@ -1,16 +1,17 @@
 package ro.bogdansoftware.order;
 
+import com.stripe.exception.StripeException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ro.bogdansoftware.clients.order.PlaceOrderDTO;
+import org.springframework.web.bind.annotation.*;
+import ro.bogdansoftware.order.model.CheckoutPayment;
+import ro.bogdansoftware.order.model.PlaceOrderDTO;
+import ro.bogdansoftware.order.model.PlaceOrderResponseDTO;
 import ro.bogdansoftware.shared.security.VerifyRole;
 
 import java.net.URI;
+import java.util.Map;
 
 @Controller
 @AllArgsConstructor
@@ -19,11 +20,22 @@ import java.net.URI;
 public class OrderController {
     private final OrderService orderService;
 
-    @PostMapping("/place-order")
-    public ResponseEntity<Void> placeOrder(PlaceOrderDTO orderDTO) {
-        this.orderService.placeOrder(orderDTO);
-        return ResponseEntity.created(URI.create("")).build();
+    @PostMapping("/place")
+    public ResponseEntity<PlaceOrderResponseDTO> placeOrder(@RequestBody PlaceOrderDTO orderDTO) {
+        return ResponseEntity.ok(this.orderService.placeOrder(orderDTO));
     }
+
+    @PutMapping("/cancel")
+    public ResponseEntity<Void> cancel(@RequestParam String orderId) {
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/pay")
+    public ResponseEntity<Map<String, String>> pay(@RequestBody CheckoutPayment payment) throws StripeException {
+        return ResponseEntity.ok(orderService.pay(payment));
+    }
+
 
     @GetMapping("/test")
     @VerifyRole("ADMIN")

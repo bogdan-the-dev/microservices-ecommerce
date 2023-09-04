@@ -2,10 +2,7 @@ package ro.bogdansoftware.clients.inventory;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(
         value = "inventory",
@@ -17,4 +14,7 @@ public interface IInventoryClient {
 
     @DeleteMapping("delete-inventory")
     ResponseEntity<Void> deleteInventory(@RequestParam(value = "id") String id);
+
+    @PutMapping("order-modify-inventory")
+    ResponseEntity<Boolean> orderModifyInventory(@RequestBody ListOfInventoryItemsDTO requestDTO);
 }

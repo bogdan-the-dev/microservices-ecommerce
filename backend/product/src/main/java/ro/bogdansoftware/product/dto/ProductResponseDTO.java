@@ -1,5 +1,6 @@
 package ro.bogdansoftware.product.dto;
 
+import ro.bogdansoftware.product.Serializer;
 import ro.bogdansoftware.product.model.Product;
 import ro.bogdansoftware.product.model.Promotion;
 import ro.bogdansoftware.product.model.Variation;
@@ -16,8 +17,8 @@ public record ProductResponseDTO(
         BigDecimal price,
         String subcategory,
         List<String> photos,
-        Map<String, Map<String, String>> variations,
-        Map<String, Map<String, String>> specifications,
+        String variations,
+        String specifications,
         Promotion promotion,
         Boolean outOfStock
 
@@ -32,8 +33,8 @@ public record ProductResponseDTO(
                 p.getPrice(),
                 p.getSubcategory(),
                 p.getPhotos(),
-                p.getVariations(),
-                p.getSpecifications(),
+                Serializer.serializeSpecs(p.getVariations()),
+                Serializer.serializeSpecs(p.getSpecifications()),
                 p.getPromotion(),
                 p.isOutOfStock());
     }
@@ -43,7 +44,7 @@ public record ProductResponseDTO(
                 .builder()
                 .id(responseDTO.id)
                 .description(responseDTO.description)
-                .variations(responseDTO.variations)
+                .variations(Serializer.deserializeSpecs(responseDTO.variations))
                 .build();
     }
 }

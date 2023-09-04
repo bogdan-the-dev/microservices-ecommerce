@@ -8,9 +8,9 @@ export interface ProductFullModel{
   category: string
   subcategory: string
   description: string
-  specifications: Map<string, Map<string, string>>
+  specifications: string
   promotion: PromoModel
   outOfStock: boolean
-  variation: Map<string, Map<string, string>>
+  variation: string
   isEnabled?: boolean
 }

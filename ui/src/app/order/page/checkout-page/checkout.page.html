@@ -1,50 +1,7 @@
 <div class="container">
   <h2>Checkout</h2>
-  <!--<div class="checkout-container">
-    <div class="checkout-card">
-      <mat-card>
-        <mat-card-title>Checkout Overview</mat-card-title>
-        <mat-card-content>
-          <div *ngFor="let item of cartItems" class="checkout-item">
-            <img [src]="item.image" alt="Item Image" class="item-image">
-            <div class="item-details">
-              <h4>{{ item.title }}</h4>
-              <p>Price: ${{ item.price }}</p>
-              <p>Quantity: {{ item.quantity }}</p>
-              <p>${{ item.price * item.quantity }}</p>
-            </div>
-          </div>
-        </mat-card-content>
-        <mat-card-actions>
-          <div class="total-amount">
-            <h4>Subtotal: ${{ total }}</h4>
-          </div>
-        </mat-card-actions>
-      </mat-card>
-    </div>
-    <div class="details-card">
-      <mat-card>
-        <mat-card-title>User Details</mat-card-title>
-        <mat-card-content>
-          <h3>Delivery Address</h3>
-          &lt;!&ndash; Include the user billing details fields here &ndash;&gt;
-          <h3>Billing Details</h3>
-
-          &lt;!&ndash; Include the delivery address fields here &ndash;&gt;
-
-          <h3>Delivery Method</h3>
-          &lt;!&ndash; Include the delivery method fields here &ndash;&gt;
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="pay-button-container">
-      <button mat-raised-button color="primary">Pay</button>
-
-    </div>
-  </div>-->
-
   <mat-stepper linear #stepper>
-    <mat-step [stepControl]="billingForm" >
+    <mat-step [stepControl]="billingForm" (click)="onBillingFormFinished()">
       <form [formGroup]="billingForm" style="margin-top: 20px">
         <ng-template matStepLabel>Billing information</ng-template>
         <div class="input-div-width">
@@ -86,12 +43,12 @@
         </div>
 
         <div>
-          <button mat-button matStepperNext [disabled]="billingForm.invalid">Next</button>
+          <button mat-button matStepperNext [disabled]="billingForm.invalid" (click)="onBillingFormFinished()" >Next</button>
         </div>
       </form>
     </mat-step>
 
-    <mat-step [stepControl]="addressForm">
+    <mat-step [stepControl]="addressForm" (click)="onDeliveryFormFinished()">
       <form [formGroup]="addressForm" style="margin-top: 20px">
         <ng-template matStepLabel>Delivery information</ng-template>
         <div>
@@ -146,44 +103,85 @@
         </div>
         <div>
           <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext [disabled]="addressForm.invalid" >Next</button>
+          <button mat-button matStepperNext [disabled]="addressForm.invalid" (click)="onDeliveryFormFinished()" >Next</button>
         </div>
       </form>
     </mat-step>
 
-    <mat-step [stepControl]="paymentForm">
+    <mat-step [stepControl]="paymentForm" (click)="onPaymentSelected()">
       <form [formGroup]="paymentForm">
         <ng-template matStepLabel>Payment type</ng-template>
         <mat-radio-group formControlName="method">
           <div>
-            <mat-radio-button value="onlineWithCard">
-              Online with Card
+            <mat-radio-button [value]="PaymentType.CARD">
+              Card
             </mat-radio-button>
           </div>
           <div>
-            <mat-radio-button value="onlineWireTransfer">
-              Online via Wire Transfer
-              <span>+ $5</span>
+            <mat-radio-button [value]="PaymentType.WIRE_TRANSFER">
+              Wire Transfer
             </mat-radio-button>
           </div>
           <div>
-            <mat-radio-button value="cashOnDelivery">
-              Cash on Delivery
+            <mat-radio-button [value]="PaymentType.CASH_DELIVERY">
+              Cash on delivery
             </mat-radio-button>
           </div>
         </mat-radio-group>
         <div>
           <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext [disabled]="paymentForm.invalid">Next</button>
+          <button mat-button matStepperNext [disabled]="paymentForm.invalid" (click)="onPaymentSelected()" >Next</button>
         </div>
       </form>
     </mat-step>
 
     <mat-step>
       <ng-template matStepLabel>Overview</ng-template>
+      <div class="checkout-container">
+  <div class="checkout-card">
+    <mat-card>
+      <mat-card-title>Checkout Overview</mat-card-title>
+      <mat-card-content>
+        <div *ngFor="let item of cartItems" class="checkout-item">
+          <img [src]="item.image" alt="Item Image" class="item-image">
+          <div class="item-details">
+            <h4>{{ item.title }}</h4>
+            <p>Price: ${{ item.price }}</p>
+            <p>Quantity: {{ item.quantity }}</p>
+            <p>${{ item.price * item.quantity }}</p>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="total-amount">
+          <h4>Subtotal: ${{ total }}</h4>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <div class="details-card">
+    <mat-card>
+      <mat-card-title>User Details</mat-card-title>
+      <mat-card-content>
+        <h3>Full Name</h3>
+        {{billingInfo?.firstName}} {{billingInfo?.lastName}}
+        <h3>Phone number</h3>
+        {{deliveryInfo?.phoneNumber}}
+        <h3>Delivery Address</h3>
+        {{deliveryInfo?.county}}, {{deliveryInfo?.city}}, {{deliveryInfo?.address}}
+        <h3>Billing Details</h3>
+        {{billingInfo?.county}}, {{billingInfo?.city}}, {{billingInfo?.address}}
+        <h3>Payment Type</h3>
+        {{ capitalize(getPaymentTypeByValue(paymentType)?.replace('_',' '))}}
+        <h3>Delivery Method</h3>
+        Shipping
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
       <div>
         <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <button mat-button matStepperNext (click)="placeOrder()" >Next</button>
       </div>
     </mat-step>
     <mat-step>

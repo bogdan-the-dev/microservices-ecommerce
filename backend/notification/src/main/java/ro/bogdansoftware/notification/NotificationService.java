@@ -1,11 +1,13 @@
 package ro.bogdansoftware.notification;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ro.bogdansoftware.clients.notification.SendNotificationRequest;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class NotificationService {
 
     private final EmailService emailService;
@@ -27,7 +29,8 @@ public class NotificationService {
                 emailService.send(request.destination(), request.message(), request.subject());
             }
             case SMS -> {
-                //TODO integrate with twilio
+                SMSSender.sendSMS(request.destination(), request.message());
+                log.info("SMS sent to " + request.destination());
             }
         }
     }

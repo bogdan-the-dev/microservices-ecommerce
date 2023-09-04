@@ -8,7 +8,7 @@ import {LabelType, Options} from "@angular-slider/ngx-slider";
 })
 export class PriceRangeSliderComponent{
   minPrice = 0;
-  maxPrice: number = 100000;
+  maxPrice: number = 10000;
   @Output() lowerBound: number
   @Output() upperBound: number
   @Output() sliderEnabled: boolean = false;

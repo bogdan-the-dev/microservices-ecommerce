@@ -17,7 +17,7 @@
     </div>
     <div class="container-price-variations">
     <div class="product-details">
-      <div *ngIf="product?.promotion !== undefined" class="old-price">$ {{product?.price}}</div>
+      <div *ngIf="product?.promotion.name !== null" class="old-price">$ {{product?.price}}</div>
       <div class="price">$ {{ (product?.price - (product?.price * (product?.promotion.percentage / 100))).toFixed(2)}} </div>
       <button class="add-to-cart-button" (click)="onAddToCart()"><mat-icon class="cart">add_shopping_cart</mat-icon>Add to Cart</button>
     </div>
@@ -52,7 +52,7 @@
         <a><h4>Specifications</h4></a>
         <div>
           <ul>
-            <li *ngFor="let specGroup of product?.specifications | keyvalue">
+            <li *ngFor="let specGroup of Deserializer.deserialize(product?.specifications) | keyvalue">
               <strong>{{ specGroup.key }}</strong>
               <ul>
                 <li *ngFor="let spec of specGroup.value | keyvalue">

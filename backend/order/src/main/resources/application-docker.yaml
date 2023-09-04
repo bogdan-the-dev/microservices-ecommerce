@@ -11,6 +11,8 @@ spring:
     database-platform: "org.hibernate.dialect.PostgreSQLDialect"
   application:
     name: order
+  rabbitmq:
+    addresses: rabbitmq:5672
 server:
   port: 8301
 

@@ -17,7 +17,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <image>europe-central2-docker.pkg.dev/just-palace-389214/ecommerce-microservices/${project.artifactId}:${project.version}</image>
+        <image>bogdantamba/${project.artifactId}:${project.version}</image>
     </properties>
 
     <dependencies>

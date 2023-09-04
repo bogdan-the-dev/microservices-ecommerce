@@ -16,10 +16,6 @@ spring:
   application:
     name: notification
   mail:
-    host: localhost
-    port: 1025
-    username: hello
-    password: hello
     properties:
       mail:
         smtp:
@@ -51,3 +47,14 @@ rabbitmq:
     notification: notification.queue
   routing-key:
     internal-notification: internal.notification.routing-key
+
+twilio:
+  account-sid: 'AC6066756e9e21f73382af7a0f85716a52'
+  auth-token: '4611d61801aefedd9d5ad392b71a6b66'
+  sender-number: '+16562163138'
+
+mail:
+  host: 'smtp.gmail.com'
+  port: 587
+  username: 'everything.online.office@gmail.com'
+  password: "plelpfzxsyrdasey"

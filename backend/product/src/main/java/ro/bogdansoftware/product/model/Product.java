@@ -33,5 +33,4 @@ public class Product {
     public String getFirstPhoto() {
         return this.photos.size() > 0 ? this.photos.get(0) : "";
     }
-
 }

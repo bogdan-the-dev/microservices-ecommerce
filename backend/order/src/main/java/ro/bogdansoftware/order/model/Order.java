@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -20,15 +21,33 @@ public class Order {
     @Column(name = "id", unique = true)
     private long id;
 
-    private String userId;
+    private String username;
 
-    private Date orderDate;
+    private LocalDateTime orderDate;
 
     private BigDecimal orderTotal;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_id", referencedColumnName = "status_id")
-    private OrderStatus status;
+    private String trackingNumber;
 
-    private boolean sendUpdateOnStatusChange;
+    private String phoneNumber;
+
+    private String billingAddress;
+
+    private boolean notifySMS;
+
+    private String deliveryAddress;
+
+    private String billingName;
+
+    private String deliveryName;
+
+    private BigDecimal transportCost;
+
+    private String stripeId;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentType paymentType;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 }

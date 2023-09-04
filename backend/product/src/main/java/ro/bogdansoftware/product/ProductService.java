@@ -1,5 +1,6 @@
 package ro.bogdansoftware.product;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -8,6 +9,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import ro.bogdansoftware.clients.file.IFileClient;
 import ro.bogdansoftware.clients.file.PhotoDeleteDTO;
@@ -17,6 +19,7 @@ import ro.bogdansoftware.clients.inventory.InventoryDTO;
 import ro.bogdansoftware.clients.review.IReviewClient;
 import ro.bogdansoftware.clients.review.ReviewProductPreview;
 import ro.bogdansoftware.product.dto.*;
+import ro.bogdansoftware.product.model.ComparisonType;
 import ro.bogdansoftware.product.model.Product;
 import ro.bogdansoftware.product.model.ProductFilter;
 
@@ -51,7 +54,7 @@ public class ProductService {
                 .price(productDTO.price())
                 .category(productDTO.category())
                 .subcategory(productDTO.subcategory())
-                .specifications(productDTO.specifications())
+                .specifications(Serializer.deserializeSpecs(productDTO.specifications()))
                 .promotion(productDTO.promotion())
                 .outOfStock(productDTO.outOfStock())
                 .photos(new LinkedList<>())
@@ -91,7 +94,7 @@ public class ProductService {
                 p.getCategory(),
                 p.getSubcategory(),
                 p.getPhotos(),
-                p.getSpecifications(),
+                Serializer.serializeSpecs(p.getSpecifications()),
                 p.getPromotion(),
                 p.isOutOfStock(),
                 p.isEnabled());
@@ -125,9 +128,9 @@ public class ProductService {
         product.setDescription(requestDTO.description());
         product.setCategory(requestDTO.category());
         product.setSubcategory(requestDTO.subcategory());
-        product.setSpecifications(requestDTO.specifications());
+        product.setSpecifications(Serializer.deserializeSpecs(requestDTO.specifications()));
         product.setLatestEditTimestamp(LocalDateTime.now());
-        product.setEnabled(requestDTO.isEnabled());
+        product.setPromotion(requestDTO.promotion());
 
         HashSet<String> dtoPhotos = new HashSet<>(requestDTO.photos());
 
@@ -149,7 +152,7 @@ public class ProductService {
         }
         LinkedList<String> productPhotos = new LinkedList<>();
         for(String photo: requestDTO.photos()) {
-            if (photo.contains("storage.googleapis.com/download/storage/v1/b/photo-storage-bucket")) {
+            if (photo.contains("storage.googleapis.com/download/storage/v1/b/product-photo-storage-bucket")) {
                 productPhotos.add(photo);
             } else {
                 productPhotos.add(newUrls.poll());
@@ -211,12 +214,12 @@ public class ProductService {
             return;
         }
         Product p = opt.get();
-        p.setOutOfStock(status);
+        p.setOutOfStock(!status);
         productRepository.save(p);
     }
 
-    public Dictionary<String, BigDecimal> getProductsPrices(List<String> ids) {
-        Dictionary<String, BigDecimal> prices = new Hashtable<>();
+    public Map<String, BigDecimal> getProductsPrices(List<String> ids) {
+        Map<String, BigDecimal> prices = new Hashtable<>();
         for(String productId: ids) {
             Optional<Product> o = productRepository.findById(productId);
             o.ifPresent(product -> prices.put(productId, product.getPrice()));
@@ -250,20 +253,25 @@ public class ProductService {
         for(int i = 0; i < products.size(); i++) {
             Product p = products.get(i);
 
-            productPreviewDTOS.add(
-                    ProductPreviewDTO.builder()
+            var hasPromo = p.getPromotion() != null;
+            PromotionDTO pDTO = null;
+            if(hasPromo) {
+                pDTO = new PromotionDTO(p.getPromotion().name(), p.getPromotion().percentage());
+            }
+
+            var dto =ProductPreviewDTO.builder()
                             .id(p.getId())
                             .title(p.getTitle())
                             .imagePath(p.getPhotos().get(0))
-                            .promoActive(false)
-                            .promo(new PromotionDTO())
                             .price(p.getPrice())
+                            .promoActive(hasPromo)
+                            .promo(pDTO)
                             .rating(reviews.getRatings().get(i))
                             .numberOfReviews(reviews.getNumberOfRatings().get(i))
                             .isAvailable(!p.isOutOfStock())
                             .tags(new LinkedList<>())
-                            .build()
-            );
+                            .build();
+            productPreviewDTOS.add(dto);
         }
         return new PreviewDTO(productPreviewDTOS, getProductNumber(filters));
     }
@@ -283,6 +291,7 @@ public class ProductService {
     }
 
     private List<Product> getProductFiltered(List<ProductFilter> filters, int page) {
+        filters.add(new ProductFilter("isEnabled", ComparisonType.EQUALS, "true"));
         Criteria criteria = getCriteria(filters);
         Query query = new Query(criteria);
         query.with(PageRequest.of(page-1, PAGE_SIZE));
@@ -293,14 +302,28 @@ public class ProductService {
         Criteria criteria = new Criteria();
 
         for(ProductFilter filter : filters) {
+            Object value;
+            if(Objects.equals(filter.fieldName(), "isEnabled") || Objects.equals(filter.fieldName(), "outOfStock")) {
+                value = Objects.equals(filter.value(), "true");
+            } else if (Objects.equals(filter.fieldName(), "price") && !filter.value().contains("|")) {
+                value = new BigDecimal(filter.value());
+
+            } else {
+                value = filter.value();
+            }
             switch (filter.comparisonType()) {
-                case EQUALS -> criteria.and(filter.fieldName()).is(filter.value());
-                case GREATER_THAN -> criteria.and(filter.fieldName()).gte(filter.value());
-                case LESS_THAN -> criteria.and(filter.fieldName()).lte(filter.value());
+                case EQUALS -> criteria.and(filter.fieldName()).is(value);
+                case GREATER_THAN -> criteria.and(filter.fieldName()).gte(value);
+                case LESS_THAN -> criteria.and(filter.fieldName()).lte(value);
+                case BETWEEN -> {
+                    String[] numbersArray = filter.value().split("\\|");
+                    criteria.and(filter.fieldName()).gte(new BigDecimal(numbersArray[0])).lte(new BigDecimal(numbersArray[1].equals("Infinity")? (String.valueOf(Integer.MAX_VALUE)) : numbersArray[1]));
+                }
                 default -> throw new IllegalArgumentException("Invalid comparison");
             }
         }
         return criteria;
     }
+
 
 }

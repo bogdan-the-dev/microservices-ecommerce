@@ -33,11 +33,12 @@ export class RegisterFormComponent implements OnInit{
       .subscribe({
         next: data => {
           console.log('Success')
-          this.snackBar.open('The email containing the password reset link was successfully sent', 'X', {
+          this.snackBar.open('The email containing the activation link was successfully sent', 'X', {
             duration: 6000,
             panelClass: ['snackbar-success']
           })
           this.registerForm.reset()
+
         },
         error: err => {
           this.error = err.error.message

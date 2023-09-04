@@ -9,6 +9,8 @@ import {CategoryService} from "../../service/category.service";
 import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 import {PromotionService} from "../../service/promotion.service";
 import {CreateProductModel, ProductPromotion} from "../../model/create-product.model";
+import {Deserializer} from "../../../shared/utils/deserializer";
+import {Serializer} from "../../../shared/utils/Serializer";
 
 @Component({
   selector: 'app-product-modal',
@@ -189,7 +191,7 @@ export class ProductModalComponent implements OnInit{
 
   onSubmit() {
     const initialQuantity = this.disableInitialQuantity? 0 : this.form.get('initialQuantity').value
-    const product: CreateProductModel = {
+    let product: CreateProductModel = {
       id: this.id,
       title: this.form.get('title').value,
       description: this.form.get('description').value,
@@ -197,13 +199,16 @@ export class ProductModalComponent implements OnInit{
       category: this.form.get('category').value.name,
       subcategory: this.form.get('subcategory')?.value?.name,
       photos: this.selectedPhotos,
-      specifications: this.parseSpecifications(),
+      specifications: Serializer.serialize(this.parseSpecifications()),
       promotion: this.getPromotion(this.form.get('promotion').value),
       outOfStock: this.form.get('outOfStock').value,
       initialQuantity: initialQuantity,
       isEnabled: this.form.get('isEnabled').value
     }
-
+    if(product.isEnabled == null) {
+      product.isEnabled = false
+    }
+    product.specifications =  Serializer.serialize(this.parseSpecifications())
     if (!this.editMode) {
       this.productService.addProduct(product).subscribe(_ => {
         this.closeDialog()
@@ -267,6 +272,28 @@ export class ProductModalComponent implements OnInit{
       isEnabled: this.product.isEnabled,
       promotion: this.product.promotion,
   })
+
+      const specificationsFormArray = this.form.get('specifications') as FormArray;
+      let map = Deserializer.deserialize(this.product.specifications)
+      map.forEach((fieldsMap, subcategory) => {
+        const subcategoryGroup = this.formBuilder.group({
+          subcategory: [subcategory, Validators.required],
+          fields: this.formBuilder.array([]),
+        });
+
+        const fieldsFormArray = subcategoryGroup.get('fields') as FormArray;
+        fieldsMap.forEach((value, name) => {
+          const fieldGroup = this.formBuilder.group({
+            name: [name, Validators.required],
+            value: [value, Validators.required],
+          });
+          fieldsFormArray.push(fieldGroup);
+        });
+
+        specificationsFormArray.push(subcategoryGroup);
+      });
+
+
 
   }
   comparePromotions(promotion1: any, promotion2: any) {

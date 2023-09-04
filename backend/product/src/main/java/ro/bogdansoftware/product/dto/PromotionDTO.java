@@ -1,4 +1,8 @@
 package ro.bogdansoftware.product.dto;
 
-public record PromotionDTO() {
+import java.math.BigDecimal;
+
+public record PromotionDTO(
+        String name,
+        BigDecimal percentage) {
 }

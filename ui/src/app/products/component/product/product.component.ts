@@ -6,6 +6,7 @@ import {Store} from "@ngrx/store";
 import {ItemCartModel} from "../../../shopping-cart/model/item-cart.model";
 import {CartAction} from "../../../shopping-cart/state-management/cart.action";
 import {ActivatedRoute} from "@angular/router";
+import {Deserializer} from "../../../shared/utils/deserializer";
 
 @Component({
   selector: 'app-product-component',
@@ -90,7 +91,7 @@ export class ProductComponent extends BaseComponent implements OnInit{
     if(this.product.variation == null) {
       return;
     }
-    this.product.variation.forEach((variationOption, variationName) => {
+    Deserializer.deserialize(this.product.variation).forEach((variationOption, variationName) => {
       let arr: [string, string][] = []
       variationOption.forEach((option, link) => {
         arr.push([link, option])
@@ -121,4 +122,5 @@ export class ProductComponent extends BaseComponent implements OnInit{
     }
   }
 
+  protected readonly Deserializer = Deserializer;
 }

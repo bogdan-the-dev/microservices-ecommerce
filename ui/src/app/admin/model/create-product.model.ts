@@ -7,7 +7,7 @@ export interface CreateProductModel {
   category: string
   subcategory: string
   photos: string[]
-  specifications: Map<string, Map<string, string>>
+  specifications: string
   promotion: ProductPromotion
   outOfStock: boolean
   initialQuantity: number

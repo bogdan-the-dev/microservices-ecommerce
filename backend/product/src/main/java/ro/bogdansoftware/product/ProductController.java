@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Dictionary;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -53,7 +54,7 @@ public class ProductController {
     }
 
     @PostMapping("get-products-prices")
-    public ResponseEntity<Dictionary<String, BigDecimal>> getProductsPrices(List<String> productsIds) {
+    public ResponseEntity<Map<String, BigDecimal>> getProductsPrices(@RequestBody List<String> productsIds) {
         return ResponseEntity.ok(this.productService.getProductsPrices(productsIds));
     }
 

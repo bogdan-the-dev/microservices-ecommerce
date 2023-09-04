@@ -18,6 +18,7 @@ import {StoreModule} from "@ngrx/store";
 import {cartFeatureName, cartReducerMap} from "../shopping-cart/state-management/cart.state";
 import {EffectsModule} from "@ngrx/effects";
 import {CartEffect} from "../shopping-cart/state-management/cart.effect";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 
 
@@ -31,18 +32,19 @@ import {CartEffect} from "../shopping-cart/state-management/cart.effect";
     ProductPage,
     ProductComponent
   ],
-  imports: [
-    CommonModule,
-    ProductsRoutingModule,
-    MatIconModule,
-    NgbModule,
-    FormsModule,
-    MatSliderModule,
-    HammerModule,
-    NgxSliderModule,
-    MatChipsModule,
-    StoreModule.forFeature(cartFeatureName, cartReducerMap),
-    EffectsModule.forFeature([CartEffect])
-  ]
+    imports: [
+        CommonModule,
+        ProductsRoutingModule,
+        MatIconModule,
+        NgbModule,
+        FormsModule,
+        MatSliderModule,
+        HammerModule,
+        NgxSliderModule,
+        MatChipsModule,
+        StoreModule.forFeature(cartFeatureName, cartReducerMap),
+        EffectsModule.forFeature([CartEffect]),
+        MatCheckboxModule
+    ]
 })
 export class ProductsModule { }

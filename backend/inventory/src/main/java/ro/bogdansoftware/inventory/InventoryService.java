@@ -44,8 +44,6 @@ public class InventoryService {
         int actualQuantity = (int) redisTemplate.opsForHash().get("Inventory", id);
         if(quantity == 0) {
             productClient.changeInventoryStatus(id,false);
-            //todo send notification to disable product
-            //todo send notification to department that stock is empty
         }
         else if(actualQuantity == 0 && quantity > 0) {
             productClient.changeInventoryStatus(id, true);
@@ -78,13 +76,11 @@ public class InventoryService {
 
                     operations.multi();
 
-                    //HashOperations<String, String, Integer> hashOperations = operations.opsForHash();
                     int index = 0;
                     for (String itemId : orderItems.keySet()) {
                         var localQty = qty.get(index);
                         if(localQty == 0) {
-                            //todo send notification to disable product
-                            //todo send notification to department that stock is empty
+                            productClient.changeInventoryStatus(itemId,false);
                         }
                         if (localQty < 0) {
                             operations.discard();

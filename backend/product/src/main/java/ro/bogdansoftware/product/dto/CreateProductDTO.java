@@ -15,7 +15,7 @@ public record CreateProductDTO(
         String category,
         String subcategory,
         List<String> photos,
-        Map<String, Map<String, String>> specifications,
+        String specifications,
         Promotion promotion,
         Boolean outOfStock,
         Integer initialQuantity

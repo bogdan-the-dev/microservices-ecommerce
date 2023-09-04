@@ -1,8 +1,29 @@
 <div>
   <div class="products-page ">
     <div class="filter-options">
-      <!-- Filter options content goes here -->
-      <app-product-filter></app-product-filter>
+      <div class="filter-options">
+        <div class="filter-category">
+          Availability
+        </div>
+        <div class="filter-option">
+          <mat-checkbox (change)="onAvailableOnly($event)">Available only</mat-checkbox>
+
+        </div>
+
+        <div class="filter-category">
+          Price Range
+        </div>
+        <div class="filter-option price-filter">
+          <div class="slider-container">
+            <div class="price-range" *ngFor="let range of priceRanges">
+              <input type="radio" [id]="range.label" [name]="'price-range'" [(ngModel)]="selectedPriceRange" [value]="range" (click)="onPriceChange(range)">
+              <label [for]="range.label">{{ range.label }}</label>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
     </div>
 
     <div class="product-list">

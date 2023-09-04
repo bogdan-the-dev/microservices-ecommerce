@@ -17,6 +17,19 @@ export class ProductsPage implements OnInit{
   subcategory: string
   products: ProductPreviewModel[] = []
   numberOfProducts
+  priceRanges: { label: string, min: number, max: number }[] = [
+    { label: 'All', min: 0, max: Infinity},
+    { label: 'Below $50', min: 0, max: 50 },
+    { label: '$50 - $100', min: 50, max: 100 },
+    { label: '$100 - $200', min: 100, max: 200 },
+    { label: '$200 - $500', min: 200, max: 500 },
+    { label: '$500 and above', min: 500, max: Infinity }
+  ];
+
+  availableOnly: boolean = false
+  selectedPriceRange: any;
+  priceFilters: ProductFilerModel[] = []
+  selectedOnlyFilter: ProductFilerModel
 
   constructor(config: NgbPaginationConfig, private route: ActivatedRoute, private router: Router, private productsService: ProductsService) {
     // Customize pagination appearance
@@ -38,14 +51,43 @@ export class ProductsPage implements OnInit{
       }
     })
   }
+  onPriceChange(range: any) {
+    this.priceFilters = []
+    if(range.min == 0 && range.max == Infinity) {
+      this.priceFilters.push({fieldName:'price', comparisonType: ComparisonType.GREATER_THAN, value: range.min.toString()})
+    } else if (range.min == 500 && range.max == Infinity) {
+      this.priceFilters.push({fieldName:'price', comparisonType: ComparisonType.GREATER_THAN, value: range.min.toString()})
+    } else if(range.min == 0 && range.max == 50) {
+      this.priceFilters.push({fieldName:'price', comparisonType: ComparisonType.LESS_THAN, value: range.max.toString()})
+    } else {
+      this.priceFilters.push({fieldName:'price', comparisonType: ComparisonType.BETWEEN, value: range.min.toString()+'|'+range.max.toString()})
+    }
+    this.applyFilters()
+  }
 
-  applyFilters() {
+  onAvailableOnly(val) {
+    if(val.checked) {
+      this.selectedOnlyFilter = {fieldName: 'outOfStock', comparisonType: ComparisonType.EQUALS, value: 'false'}
+    } else {
+      this.selectedOnlyFilter = null
+    }
+    this.applyFilters()
+  }
+
+  applyFilters(arr: ProductFilerModel[] = []) {
     const filters: ProductFilerModel[] = []
     filters.push({fieldName: 'category', comparisonType: ComparisonType.EQUALS, value: this.category})
     if (this.subcategory != '') {
       filters.push({fieldName: 'subcategory', comparisonType: ComparisonType.EQUALS, value: this.subcategory})
     }
-
+    if(this.priceFilters != []) {
+      this.priceFilters.forEach(filter => {
+        filters.push(filter)
+      })
+    }
+    if(this.selectedOnlyFilter != null) {
+      filters.push(this.selectedOnlyFilter)
+    }
     this.productsService.getProductsOverview(filters, this.currentPage.toString()).subscribe((res: any) => {
       this.products = res.products
       this.numberOfProducts = res.numberOfProducts

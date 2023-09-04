@@ -5,6 +5,7 @@ import {ProductFullModel} from "../model/product-full.model";
 import {ProductTableModel} from "../../admin/model/product-table.model";
 import {CreateProductModel} from "../../admin/model/create-product.model";
 import {ProductFilerModel} from "../model/product-filer.model";
+import {Deserializer} from "../../shared/utils/deserializer";
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +68,7 @@ export class ProductsService {
       formData.append('photos[]', product.photos[i])
     }
     const specificationsObj: { [key: string]: { [key: string]: string } } = {};
-    product.specifications.forEach((value, key) => {
+    Deserializer.deserialize(product.specifications).forEach((value, key) => {
       specificationsObj[key] = Object.fromEntries(value);
     });
 

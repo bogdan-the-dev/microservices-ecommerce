@@ -13,7 +13,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <image>gcr.io/just-palace-389214/${project.artifactId}:${project.version}</image>
+        <image>bogdantamba/${project.artifactId}:${project.version}</image>
     </properties>
 
     <packaging>jar</packaging>

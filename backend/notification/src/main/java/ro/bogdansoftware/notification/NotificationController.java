@@ -21,6 +21,6 @@ public class NotificationController {
 
     @GetMapping("test")
     public void test() {
-        this.sendNotification(new SendNotificationRequest("VrEaU sA mErG lA tEaTrU!!!!!", NotificationType.CONFIRMATION_EMAIL, "gabirel", "Vreau la teatru", "cornicushorn@gmail.com"));
+        this.sendNotification(new SendNotificationRequest("VrEaU sA mErG lA tEaTrU!!!!!", NotificationType.INFO_EMAIL, "gabirel", "Vreau la teatru", "adelatamba@gmail.com"));
     }
 }

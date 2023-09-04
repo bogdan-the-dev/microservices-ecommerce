@@ -4,5 +4,6 @@ public enum ComparisonType {
     EQUALS,
     GREATER_THAN,
     LESS_THAN,
-    CONTAINS
+    CONTAINS,
+    BETWEEN
 }
