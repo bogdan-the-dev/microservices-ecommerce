@@ -64,6 +64,10 @@ public class OrderService {
         return responseData;
     }
 
+    public boolean hasUserBoughtItem(String username, String productId) {
+        return orderItemRepository.findOrderItemsByItemIdIsAndOrderUsernameIs(productId, username).size()>0;
+    }
+
     public List<MyOrderDTO> getMyOrders(String username) {
         return orderRepository.getOrdersByUsernameIs(username).stream().map(MyOrderDTO::convert).collect(Collectors.toList());
     }

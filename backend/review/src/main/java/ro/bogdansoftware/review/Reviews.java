@@ -10,7 +10,6 @@ import java.util.List;
 
 @Builder
 @Document
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class Reviews {
     @Id
@@ -20,6 +19,10 @@ public class Reviews {
     private List<IndividualReview> threeStar;
     private List<IndividualReview> fourStar;
     private List<IndividualReview> fiveStar;
+
+    public Reviews() {
+
+    }
 
     public Reviews(String productId) {
         this.productId = productId;

@@ -25,10 +25,10 @@ public class ReviewsService {
         this.repository.insert(reviews);
     }
 
-    public void addReview(AddReviewDTO reviewDTO) {
+    public void addReview(AddReviewDTO reviewDTO, String username) {
         Reviews reviews = repository.getReviewsByProductId(reviewDTO.productId());
         IndividualReview individualReview = IndividualReview.builder()
-                .username(reviewDTO.username())
+                .username(username)
                 .review(reviewDTO.review())
                 .build();
 

@@ -30,8 +30,10 @@ public class AuthenticationPrefilter extends AbstractGatewayFilterFactory<Authen
             "api/v1/cart/get-cart",
             "api/v1/cart/add-item",
             "api/v1/cart/empty-cart",
-            "api/v1/cart/remove-item"
-
+            "api/v1/cart/remove-item",
+            "api/v1/order/has-user-bought-item",
+            "api/v1/reviews/verify-review-present",
+            "api/v1/reviews/add-review"
     );
 
 

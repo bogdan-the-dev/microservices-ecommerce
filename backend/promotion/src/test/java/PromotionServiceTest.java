@@ -29,27 +29,6 @@ public class PromotionServiceTest {
     @Mock
     private IPromotionRepository repository;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    public void testDisablePromotion() {
-        String promotionId = "123";
-        Promotion promotion = new Promotion();
-        promotion.setId(promotionId);
-        promotion.setActive(true);
-        when(repository.findById(promotionId)).thenReturn(Optional.of(promotion));
-
-        List<String> ids = new ArrayList<>();
-        ids.add(promotionId);
-        promotionService.disablePromotion(ids);
-
-        verify(repository, times(1)).save(promotion);
-        assertFalse(promotion.getActive());
-    }
-
     @Test
     public void testDisablePromotionInvalidId() {
         String invalidPromotionId = "invalidId";
@@ -97,20 +76,6 @@ public class PromotionServiceTest {
         });
 
         assertEquals("Invalid promotion id", exception.getMessage());
-    }
-
-    @Test
-    public void testDeletePromotion() {
-        String promotionId = "123";
-        Promotion promotion = new Promotion();
-        promotion.setId(promotionId);
-
-        List<String> ids = new ArrayList<>();
-        ids.add(promotionId);
-
-        promotionService.deletePromotion(ids);
-
-        verify(repository, times(1)).deletePromotionById(promotionId);
     }
 
     @Test

@@ -43,6 +43,15 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getMyOrders(username));
     }
 
+    @GetMapping("/has-user-bought-item")
+    public ResponseEntity<Boolean>hasUserBoughtItem(@RequestHeader("USERNAME") String username , @RequestParam(name = "itemId") String itemId) {
+        if(username == null) {
+            return ResponseEntity.ok(false);
+        }
+        return ResponseEntity.ok(orderService.hasUserBoughtItem(username, itemId));
+    }
+
+
     @GetMapping("/get-all")
     public ResponseEntity<List<MyOrderDTO>> getAll() {
         return ResponseEntity.ok(orderService.getAll());

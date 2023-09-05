@@ -1,3 +1,64 @@
 <div class="container">
   <app-product-component [id]="productId"></app-product-component>
-</div>
+  <div>
+    <div style="display: flex">
+      <h4>Reviews</h4>
+      <button [hidden]="!canAddReview()" mat-icon-button color="primary" aria-label="Add product" matTooltip="Add review" style="vertical-align: top !important;" (click)="onAdd()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div class="rating-group">
+      <h5>Ratings: 5 stars</h5>
+      <div *ngIf="reviews?.fiveStar.length > 0; else emptyGroup">
+        <div *ngFor="let review of reviews.fiveStar.slice(0, 4)">
+          <app-individual-review-component
+            [review]="review"
+          ></app-individual-review-component>
+        </div>
+      </div>
+    </div>
+    <div class="rating-group">
+      <h5>Ratings: 4 stars</h5>
+      <div *ngIf="reviews?.fourStar.length > 0; else emptyGroup">
+        <div *ngFor="let review of reviews.fourStar.slice(0, 4)">
+          <app-individual-review-component
+            [review]="review"
+          ></app-individual-review-component>
+        </div>
+      </div>
+    </div>
+    <div class="rating-group">
+      <h5>Ratings: 3 stars</h5>
+      <div *ngIf="reviews?.threeStar.length > 0; else emptyGroup">
+        <div *ngFor="let review of reviews.threeStar.slice(0, 4)">
+          <app-individual-review-component
+            [review]="review"
+          ></app-individual-review-component>
+        </div>
+      </div>
+    </div>
+    <div class="rating-group">
+      <h5>Ratings: 2 stars</h5>
+      <div *ngIf="reviews?.twoStar.length > 0; else emptyGroup">
+        <div *ngFor="let review of reviews.twoStar.slice(0, 4)">
+          <app-individual-review-component
+            [review]="review"
+          ></app-individual-review-component>
+        </div>
+      </div>
+    </div>
+    <div class="rating-group">
+      <h5>Ratings: 1 star</h5>
+      <div *ngIf="reviews?.oneStar.length > 0; else emptyGroup">
+        <div *ngFor="let review of reviews.oneStar.slice(0, 4)">
+          <app-individual-review-component
+            [review]="review"
+          ></app-individual-review-component>
+        </div>
+      </div>
+    </div>
+      <ng-template #emptyGroup>
+        <p>No reviews with this rating.</p>
+      </ng-template>
+    </div>
+  </div>

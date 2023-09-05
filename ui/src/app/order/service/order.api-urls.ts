@@ -10,4 +10,5 @@ export class OrderApiUrls {
   static seeOrder = OrderApiUrls.baseOrderUrl + '/get'
   static changeStatus = OrderApiUrls.baseOrderUrl + '/edit'
   static getOrdersInRange = OrderApiUrls.baseOrderUrl + '/get-in-range'
+  static hasBought = OrderApiUrls.baseOrderUrl + '/has-user-bought-item'
 }

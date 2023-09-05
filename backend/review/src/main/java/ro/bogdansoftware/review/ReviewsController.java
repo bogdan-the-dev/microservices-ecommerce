@@ -29,8 +29,8 @@ public class ReviewsController {
 
     @VerifyRole("USER")
     @PutMapping("add-review")
-    public ResponseEntity<Void> addReview(@RequestBody AddReviewDTO reviewDTO) {
-        reviewsService.addReview(reviewDTO);
+    public ResponseEntity<Void> addReview(@RequestBody AddReviewDTO reviewDTO, @RequestHeader("USERNAME") String author) {
+        reviewsService.addReview(reviewDTO, author);
         return ResponseEntity.created(URI.create("")).build();
     }
 
@@ -40,7 +40,10 @@ public class ReviewsController {
     }
 
     @GetMapping("verify-review-present")
-    public ResponseEntity<Boolean> verifyReviewPresent(@RequestParam(name = "productID") String productId, @RequestParam(name = "author") String author) {
+    public ResponseEntity<Boolean> verifyReviewPresent(@RequestParam(name = "productID") String productId, @RequestHeader("USERNAME") String author) {
+        if(author == null) {
+            return ResponseEntity.ok(true);
+        }
         return ResponseEntity.ok(reviewsService.verifyReviewPresent(productId, author));
     }
 

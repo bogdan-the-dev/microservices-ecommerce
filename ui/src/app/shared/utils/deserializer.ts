@@ -1,5 +1,9 @@
 export class Deserializer {
   static deserialize(input: string) {
+    if (input == undefined || input == null) {
+      //@ts-ignore
+      return;
+    }
     const parsedObject = JSON.parse(input);
 
     // Transform the JavaScript object into a Map

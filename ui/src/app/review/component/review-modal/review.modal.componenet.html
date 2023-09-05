@@ -1,0 +1,24 @@
+<div class="popup-container">
+  <div style="height: 40px">
+    <h3>Add review</h3>
+    <button class="close-button" matTooltip="Cancel" (click)="closeDialog()"><mat-icon>close</mat-icon></button>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onAdd()">
+    <div>
+      <mat-form-field class="full-width">
+        <mat-label>Rating</mat-label>
+        <input matInput type="number" formControlName="rating">
+        <mat-error *ngIf="form.controls['rating']?.invalid && form.controls['rating']?.touched">A rating between 1 and 5 is required</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Review</mat-label>
+        <textarea matInput style="resize: none" [rows]="7" formControlName="review"></textarea>
+        <mat-error *ngIf="form.controls['review'].invalid && form.controls['review'].touched">Review is required</mat-error>
+      </mat-form-field>
+    </div>
+    <button mat-stroked-button class="full submit-button" [disabled]="form.invalid">Add</button>
+  </form>
+
+</div>

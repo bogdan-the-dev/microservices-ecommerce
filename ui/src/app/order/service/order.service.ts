@@ -25,4 +25,8 @@ export class OrderService {
     return this.http.get<MyOrderModel[]>(OrderApiUrls.getAll)
   }
 
+  getHasBoughtItem(itemId: string) {
+    return this.http.get<boolean>(OrderApiUrls.hasBought + '?itemId='+itemId)
+  }
+
 }
