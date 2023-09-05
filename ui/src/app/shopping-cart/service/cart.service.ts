@@ -54,7 +54,7 @@ export class CartService {
   }
 
   getCart() {
-    return this.http.get<CartResponseMotel[]>(CartApiUrls.getCart)
+    return this.http.get(CartApiUrls.getCart)
   }
 
   getCartLocally() {

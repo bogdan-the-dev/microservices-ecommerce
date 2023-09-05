@@ -4,6 +4,7 @@ import {OrderModel} from "../model/order.model";
 import {OrderApiUrls} from "./order.api-urls";
 import {CreateOrderModel} from "../model/create-order.model";
 import {Injectable} from "@angular/core";
+import {MyOrderModel} from "../model/my-order.model";
 
 @Injectable({
   providedIn: 'root'
@@ -16,5 +17,12 @@ export class OrderService {
     return this.http.post(OrderApiUrls.placeOrder, order)
   }
 
+  getMyOrders(username) {
+    return this.http.get<MyOrderModel[]>(OrderApiUrls.getForUser + '?username=' + username)
+  }
+
+  getAll() {
+    return this.http.get<MyOrderModel[]>(OrderApiUrls.getAll)
+  }
 
 }

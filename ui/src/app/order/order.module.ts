@@ -9,12 +9,16 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
+import {MyOrdersPage} from "./page/my-orders-page/my-orders.page";
+import {MyOrderComponent} from "./component/my-order-component/my-order.component";
 
 
 
 @NgModule({
   declarations: [
-    CheckoutPage
+    CheckoutPage,
+    MyOrdersPage,
+    MyOrderComponent
   ],
   imports: [
     CommonModule,

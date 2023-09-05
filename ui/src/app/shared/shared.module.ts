@@ -18,6 +18,7 @@ import {RouterLink, RouterLinkActive, RouterLinkWithHref} from "@angular/router"
 import {NavbarComponent} from "./component/navbar/navbar.component";
 import {ProductsModule} from "../products/products.module";
 import {MatMenuModule} from "@angular/material/menu";
+import {FormsModule} from "@angular/forms";
 
 
 
@@ -33,23 +34,24 @@ import {MatMenuModule} from "@angular/material/menu";
     HeaderComponent,
     NavbarComponent
   ],
-  imports: [
-    CommonModule,
-    MatToolbarModule,
-    NgOptimizedImage,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatBadgeModule,
-    NgbModule,
-    LoginModule,
-    ShoppingCartModule,
-    MatListModule,
-    RouterLinkWithHref,
-    RouterLink,
-    RouterLinkActive,
-    ProductsModule,
-    MatMenuModule
-  ]
+    imports: [
+        CommonModule,
+        MatToolbarModule,
+        NgOptimizedImage,
+        MatInputModule,
+        MatIconModule,
+        MatButtonModule,
+        MatBadgeModule,
+        NgbModule,
+        LoginModule,
+        ShoppingCartModule,
+        MatListModule,
+        RouterLinkWithHref,
+        RouterLink,
+        RouterLinkActive,
+        ProductsModule,
+        MatMenuModule,
+        FormsModule
+    ]
 })
 export class SharedModule { }

@@ -1,6 +1,5 @@
 package ro.bogdansoftware.product;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -9,13 +8,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import ro.bogdansoftware.clients.file.IFileClient;
 import ro.bogdansoftware.clients.file.PhotoDeleteDTO;
 import ro.bogdansoftware.clients.file.PhotoUploadDTO;
 import ro.bogdansoftware.clients.inventory.IInventoryClient;
 import ro.bogdansoftware.clients.inventory.InventoryDTO;
+import ro.bogdansoftware.clients.product.ProductForCartDTO;
 import ro.bogdansoftware.clients.review.IReviewClient;
 import ro.bogdansoftware.clients.review.ReviewProductPreview;
 import ro.bogdansoftware.product.dto.*;
@@ -23,13 +21,13 @@ import ro.bogdansoftware.product.model.ComparisonType;
 import ro.bogdansoftware.product.model.Product;
 import ro.bogdansoftware.product.model.ProductFilter;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -227,11 +225,11 @@ public class ProductService {
         return prices;
     }
 
-    public List<CartProductDTO> getProductForCart(List<String> ids) {
-        List<CartProductDTO> list = new ArrayList<>(ids.size());
+    public List<ProductForCartDTO> getProductForCart(List<String> ids) {
+        List<ProductForCartDTO> list = new ArrayList<>(ids.size());
         for (String id: ids) {
             Product p = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Invalid product id"));
-            CartProductDTO dto = new CartProductDTO(id, p.getTitle(), p.getPhotos().get(0), p.getPrice());
+            ProductForCartDTO dto = new ProductForCartDTO(id, p.getTitle(), p.getPhotos().get(0), p.getPrice());
             list.add(dto);
         }
         return list;
@@ -315,6 +313,10 @@ public class ProductService {
                 case EQUALS -> criteria.and(filter.fieldName()).is(value);
                 case GREATER_THAN -> criteria.and(filter.fieldName()).gte(value);
                 case LESS_THAN -> criteria.and(filter.fieldName()).lte(value);
+                case CONTAINS -> {
+                    Pattern p = Pattern.compile(filter.value(), Pattern.CASE_INSENSITIVE);
+                    criteria.and(filter.fieldName()).regex(p.pattern());
+                }
                 case BETWEEN -> {
                     String[] numbersArray = filter.value().split("\\|");
                     criteria.and(filter.fieldName()).gte(new BigDecimal(numbersArray[0])).lte(new BigDecimal(numbersArray[1].equals("Infinity")? (String.valueOf(Integer.MAX_VALUE)) : numbersArray[1]));
@@ -325,5 +327,12 @@ public class ProductService {
         return criteria;
     }
 
+    public void removePromotion(String id) {
+        List<Product> products = productRepository.findProductsByPromotionIdIs(id);
+        for(Product p : products) {
+            p.setPromotion(null);
+            productRepository.save(p);
+        }
+    }
 
 }

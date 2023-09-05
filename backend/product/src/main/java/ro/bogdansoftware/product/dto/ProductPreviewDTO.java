@@ -1,7 +1,6 @@
 package ro.bogdansoftware.product.dto;
 
 import lombok.Builder;
-import ro.bogdansoftware.product.model.Promotion;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import ro.bogdansoftware.clients.product.ProductForCartDTO;
 
 import java.math.BigDecimal;
 import java.util.Dictionary;
@@ -26,4 +27,10 @@ public interface IProductClient {
 
     @PostMapping("get-products-prices")
     ResponseEntity<Map<String, BigDecimal>> getProductsPrices(@RequestBody List<String> productsIds);
+
+    @PutMapping("remove-promotion")
+    ResponseEntity<Void> removePromotions(@RequestBody String id);
+
+    @PutMapping("get-product-cart")
+    ResponseEntity<List<ProductForCartDTO>> getProductForCart(@RequestBody List<String> ids);
 }

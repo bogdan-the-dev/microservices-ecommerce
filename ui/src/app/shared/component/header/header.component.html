@@ -5,8 +5,8 @@
     </a>
     <mat-form-field appearance="outline" class="w-50 " style="font-size: 14px">
       <mat-label>Search</mat-label>
-      <input matInput type="text" >
-      <button mat-button matSuffix><mat-icon>search</mat-icon></button>
+      <input matInput type="text" [(ngModel)]="searchValue" >
+      <button mat-button matSuffix (click)="onSearch()"><mat-icon>search</mat-icon></button>
     </mat-form-field>
     <app-cart-mini></app-cart-mini>
     <app-account-mini></app-account-mini>

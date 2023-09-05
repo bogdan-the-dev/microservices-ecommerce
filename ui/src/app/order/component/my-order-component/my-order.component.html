@@ -1,0 +1,27 @@
+<mat-card class="order-summary-card">
+  <mat-card-header>
+    <mat-card-title>Order Summary</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="field">
+      <span class="label">Order ID:</span>
+      <span class="value">{{ order.id }}</span>
+    </div>
+    <div class="field">
+      <span class="label">Order Date:</span>
+      <span class="value">{{ order.date | date: 'dd/MM/yyyy HH:mm' }}</span>
+    </div>
+    <div class="field">
+      <span class="label">Total Amount:</span>
+      <span class="value">{{ order.total | currency }}</span>
+    </div>
+    <div class="field">
+      <span class="label">Order Status:</span>
+      <span class="value">{{ order.status }}</span>
+    </div>
+    <div class="field">
+      <span class="label">Tracking Number:</span>
+      <span class="value">{{ order.trackingNumber==null?'Not shipped yet':order.trackingNumber }}</span>
+    </div>
+  </mat-card-content>
+</mat-card>

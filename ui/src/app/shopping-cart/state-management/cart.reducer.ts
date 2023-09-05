@@ -54,7 +54,7 @@ export function CartReducer (state = cartState, action: ActionWithPayload) {
     case CartAction.GET_CART_FINISHED: {
       const newState = {...state}
       newState.items = action.payload
-      action.payload.forEach((elem: ItemCartModel) => {
+      action.payload.forEach((elem: any) => {
         newState.numberOfItems += elem.quantity
         newState.total += elem.price * elem.quantity
       })

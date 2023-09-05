@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import ro.bogdansoftware.product.model.Product;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ProductRepository
@@ -16,4 +15,5 @@ public interface ProductRepository
     List<Product> findProductsByCategoryIs(String category);
     List<Product> findProductsBySubcategoryIs(String subcategory);
 
+    List<Product> findProductsByPromotionIdIs(String id);
 }

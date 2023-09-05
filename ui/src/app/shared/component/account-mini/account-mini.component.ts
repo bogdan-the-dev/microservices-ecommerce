@@ -4,6 +4,7 @@ import {select, Store} from "@ngrx/store";
 import {filter} from "rxjs";
 import {LoginAction} from "../../../login/state-management/login.action";
 import {CartAction} from "../../../shopping-cart/state-management/cart.action";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-account-mini',
@@ -14,7 +15,7 @@ export class AccountMiniComponent extends BaseComponent{
   mainButtonText: string;
   isAuthenticated
 
-  constructor(private store: Store<any>) {
+  constructor(private store: Store<any>, private router: Router) {
     super();
   }
 
@@ -35,7 +36,9 @@ export class AccountMiniComponent extends BaseComponent{
       })
     )
   }
-
+  navigateToOrders() {
+    this.router.navigate(['/', 'order','my-orders'])
+  }
   onLogout() {
     this.store.dispatch({type: LoginAction.LOGOUT, payload: {}})
     this.store.dispatch({type: CartAction.SAVE_ONLINE, payload: false})

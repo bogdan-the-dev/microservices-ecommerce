@@ -64,6 +64,14 @@ public class OrderService {
         return responseData;
     }
 
+    public List<MyOrderDTO> getMyOrders(String username) {
+        return orderRepository.getOrdersByUsernameIs(username).stream().map(MyOrderDTO::convert).collect(Collectors.toList());
+    }
+
+    public List<MyOrderDTO> getAll() {
+        return orderRepository.findAll().stream().map(MyOrderDTO::convert).collect(Collectors.toList());
+    }
+
     public PlaceOrderResponseDTO placeOrder(PlaceOrderDTO orderDTO) {
         List<String> productIds = orderDTO.getOrderItemDTOList().stream().map(OrderItemDTO::itemId).collect(Collectors.toList());
         var productsSpecs = productClient.getProductsPrices(productIds).getBody();

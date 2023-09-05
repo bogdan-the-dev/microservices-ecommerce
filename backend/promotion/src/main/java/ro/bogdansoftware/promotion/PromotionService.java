@@ -1,7 +1,9 @@
 package ro.bogdansoftware.promotion;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import ro.bogdansoftware.clients.product.IProductClient;
 
 import java.time.LocalDateTime;
 import java.util.GregorianCalendar;
@@ -11,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PromotionService {
     private final IPromotionRepository repository;
+    private final IProductClient productClient;
 
     public void createPromotion(Promotion p) {
         p.setCreationTimestamp(LocalDateTime.now());
@@ -28,6 +31,9 @@ public class PromotionService {
     public void disablePromotion(List<String> ids) {
         for (String id: ids) {
             Promotion p = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid promotion id"));
+            if(productClient.removePromotions(id).getStatusCode().value() == 200) {
+                repository.deletePromotionById(id);
+            }
             p.setActive(false);
             repository.save(p);
         }
@@ -43,7 +49,9 @@ public class PromotionService {
     public void deletePromotion(List<String> ids) {
         for(String id : ids) {
             Promotion p = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid promotion id"));
-            repository.deletePromotionById(id);
+            if(productClient.removePromotions(id).getStatusCode().value() == 200) {
+                repository.deletePromotionById(id);
+            }
         }
     }
 

@@ -58,52 +58,27 @@ export class CartEffect {
   getCart = this.actions.pipe(
     ofType(CartAction.GET_CART),
     map(Convert.ToPayload),
-    //@ts-ignore
-    switchMap((saveOnline) => {
-      let ids: string[] = []
-      let qty: number[] = []
-      if(saveOnline) {
-        this.service.getCart().pipe(
-          switchMap(result => {
-            if(result.length === 0) {
-              const data = this.service.getCartLocally()
-              ids = data.map(elem => elem.itemId)
-              qty = data.map(elem => elem.quantity)
-            } else {
-              ids = result.map(elem => elem.itemId)
-              qty = result.map(elem => elem.quantity)
-            }
-            return this.productService.getProductForCart(ids)
-              .pipe(
-                switchMap((products: {itemId: string, title: string, image: string, price: number}[]) => {
-                  const cartProduct: ItemCartModel[] = []
-                  for(let i = 0; i < products.length; i++) {
-                    cartProduct.push({...products[i], quantity: qty[i], id: products[i].itemId})
-                  }
-                  return of({type: CartAction.GET_CART_FINISHED, payload: cartProduct})
-                })
-              )
-          })
-        )
-      }
-      else {
-        const data = this.service.getCartLocally()
-        ids = data.map(elem => elem.itemId)
-        qty = data.map(elem => elem.quantity)
-        return this.productService.getProductForCart(ids)
-          .pipe(
-            switchMap((products: {itemId: string, title: string, image: string, price: number}[]) => {
-              const cartProduct: ItemCartModel[] = []
-              for(let i = 0; i < products.length; i++) {
-                cartProduct.push({...products[i], quantity: qty[i], id: products[i].itemId})
-              }
-              return of({type: CartAction.GET_CART_FINISHED, payload: cartProduct})
-            })
-          )
-      }
-
-    })
-  )
+    switchMap(payload => {
+      return this.service.getCart().pipe(
+        switchMap(res => {
+          return of({type: CartAction.GET_CART_FINISHED, payload: res})
+        }))
+    }))
+      // else {
+      //   const data = this.service.getCartLocally()
+      //   ids = data.map(elem => elem.itemId)
+      //   qty = data.map(elem => elem.quantity)
+      //   return this.productService.getProductForCart(ids)
+      //     .pipe(
+      //       switchMap((products: {itemId: string, title: string, image: string, price: number}[]) => {
+      //         const cartProduct: ItemCartModel[] = []
+      //         for(let i = 0; i < products.length; i++) {
+      //           cartProduct.push({...products[i], quantity: qty[i], id: products[i].itemId})
+      //         }
+      //         return of({type: CartAction.GET_CART_FINISHED, payload: cartProduct})
+      //       })
+      //     )
+      // }
 
   @Effect()
   emptyCart = this.actions.pipe(

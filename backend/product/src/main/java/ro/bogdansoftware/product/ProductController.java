@@ -3,12 +3,11 @@ package ro.bogdansoftware.product;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ro.bogdansoftware.clients.product.ProductForCartDTO;
 import ro.bogdansoftware.product.dto.*;
 import ro.bogdansoftware.product.model.ProductFilter;
 
 import java.math.BigDecimal;
-import java.net.URI;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -79,7 +78,7 @@ public class ProductController {
     }
 
     @PutMapping("get-product-cart")
-    public ResponseEntity<List<CartProductDTO>> getProductForCart(@RequestBody List<String> ids) {
+    public ResponseEntity<List<ProductForCartDTO>> getProductForCart(@RequestBody List<String> ids) {
         return ResponseEntity.ok(productService.getProductForCart(ids));
     }
 
@@ -125,6 +124,12 @@ public class ProductController {
     @PutMapping("change-category")
     public ResponseEntity<Void> changeCategory(@RequestBody ChangeProductsCategoryDTO dto) {
         productService.changeProductsCategory(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("remove-promotion")
+    public ResponseEntity<Void> removePromotions(@RequestBody String id) {
+        productService.removePromotion(id);
         return ResponseEntity.ok().build();
     }
 }

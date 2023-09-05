@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import ro.bogdansoftware.clients.product.IProductClient;
+import ro.bogdansoftware.clients.product.ProductForCartDTO;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -14,10 +17,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CartPersistenceService {
     private final RedisTemplate<String, List<CartItem>> template;
+    private final IProductClient productClient;
 
-    public List<CartItem> getCart(String username) {
+    public List<CartResponseDTO> getCart(String username) {
         List<CartItem> res = (List<CartItem>) template.opsForHash().get("Cart", username);
-        return Objects.requireNonNullElseGet(res, LinkedList::new);
+
+        var products = productClient.getProductForCart(res.stream().map(CartItem::getItemId).collect(Collectors.toList())).getBody();
+        List<CartResponseDTO> response = new ArrayList<>();
+        for(ProductForCartDTO product: products) {
+            int quantity = res.stream().filter(elem -> Objects.equals(elem.getItemId(), product.getItemId())).findFirst().get().getQuantity();
+            response.add(new CartResponseDTO(quantity, product));
+        }
+        return response;
     }
 
     public void addItem(CartItem item, String username) {

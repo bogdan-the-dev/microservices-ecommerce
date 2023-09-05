@@ -1,0 +1,64 @@
+<h2>Order Management</h2>
+
+<section class="button-section">
+  <div class="button-group">
+    <button mat-icon-button color="primary" aria-label="Edit Order" [disabled]="selection.selected.length != 1" matTooltip="Edit inventory" (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" matTooltip="Cancel" aria-label="Cancel" (click)="onCancel()">
+      <mat-icon>cancel</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" matTooltip="Refresh" aria-label="Refresh" (click)="onRefresh()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+  <div class="search-field">
+    <mat-form-field>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="text" [(ngModel)]="searchKeyword" (input)="applyFilter()" placeholder="Search by username" />
+    </mat-form-field>
+  </div>
+</section>
+
+<mat-divider></mat-divider>
+<div style="max-height: 630px; overflow-y: auto">
+  <table matSort (matSortChange)="sortData($event)" mat-table [dataSource]="filteredOrders" class="mat-elevation-z8 full-width" style="max-height: 800px">
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="masterToggle()"
+                      [checked]="isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="id" > Order Id </th>
+      <td mat-cell *matCellDef="let element">{{element.id}}</td>
+    </ng-container>
+    <ng-container matColumnDef="orderStatus">
+      <th mat-header-cell *matHeaderCellDef  > Order Status </th>
+      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+    </ng-container>
+    <ng-container matColumnDef="date" >
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="date"> Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.date| date: 'dd/MM/yyyy HH:mm' }} </td>
+    </ng-container>
+    <ng-container matColumnDef="total" >
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="total"> Total </th>
+      <td mat-cell *matCellDef="let element"> {{element.total}} </td>
+    </ng-container>
+    <ng-container matColumnDef="trackingNumber" >
+      <th mat-header-cell *matHeaderCellDef > Tracking number </th>
+      <td mat-cell *matCellDef="let element"> {{element.trackingNumber}} </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

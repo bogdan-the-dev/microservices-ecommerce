@@ -4,7 +4,6 @@ import ro.bogdansoftware.product.model.Promotion;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 public record ViewEditProductDTO(
         String id,

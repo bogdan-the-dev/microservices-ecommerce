@@ -9,7 +9,8 @@ import {ProductPage} from "./page/product-page/product.page";
       { path: 'products', component: ProductsPage },
       { path: 'products/:category', component: ProductsPage },
       { path: 'products/:category/:subcategory', component: ProductsPage },
-      { path: 'product/:name/:id', component: ProductPage}
+      { path: 'product/:name/:id', component: ProductPage},
+      { path: 'search/:text', component: ProductsPage}
 
     ])
   ],

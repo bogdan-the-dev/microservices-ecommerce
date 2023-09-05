@@ -1,11 +1,9 @@
 package ro.bogdansoftware.product.dto;
 
-import org.springframework.web.multipart.MultipartFile;
 import ro.bogdansoftware.product.model.Promotion;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 public record CreateProductDTO(
         String id,

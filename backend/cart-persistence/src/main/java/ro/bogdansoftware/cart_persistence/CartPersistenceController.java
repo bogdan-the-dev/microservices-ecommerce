@@ -3,6 +3,7 @@ package ro.bogdansoftware.cart_persistence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ro.bogdansoftware.clients.product.ProductForCartDTO;
 import ro.bogdansoftware.shared.security.VerifyRole;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class CartPersistenceController {
 
     @GetMapping("get-cart")
     @VerifyRole("USER")
-    public ResponseEntity<List<CartItem>> getCart(@RequestHeader("USERNAME") String username) {
+    public ResponseEntity<List<CartResponseDTO>> getCart(@RequestHeader("USERNAME") String username) {
         return ResponseEntity.ok(service.getCart(username));
     }
 

@@ -17,6 +17,7 @@ export class ProductsPage implements OnInit{
   subcategory: string
   products: ProductPreviewModel[] = []
   numberOfProducts
+  search: string
   priceRanges: { label: string, min: number, max: number }[] = [
     { label: 'All', min: 0, max: Infinity},
     { label: 'Below $50', min: 0, max: 50 },
@@ -35,11 +36,26 @@ export class ProductsPage implements OnInit{
     // Customize pagination appearance
     config.boundaryLinks = true;
     config.maxSize = 5;
-    this.route.params.subscribe(params => {
-      this.category = params['category']
-      this.subcategory = params['subcategory']
-      this.applyFilters()
+
+    this.route.url.subscribe(url => {
+      if (url.toString().includes('search')) {
+        this.route.params.subscribe(params => {
+          this.search = params['text']
+          this.category = null
+          this.subcategory = null
+          this.applyFilters()
+        })
+      } else {
+        this.route.params.subscribe(params => {
+          this.category = params['category']
+          this.subcategory = params['subcategory']
+          this.search = null
+          this.applyFilters()
+        })
+      }
     })
+
+
     this.route.queryParams.subscribe(params => {
 
       let pageNumber = params['page']
@@ -76,9 +92,13 @@ export class ProductsPage implements OnInit{
 
   applyFilters(arr: ProductFilerModel[] = []) {
     const filters: ProductFilerModel[] = []
-    filters.push({fieldName: 'category', comparisonType: ComparisonType.EQUALS, value: this.category})
-    if (this.subcategory != '') {
-      filters.push({fieldName: 'subcategory', comparisonType: ComparisonType.EQUALS, value: this.subcategory})
+    if(this.category != null) {
+      filters.push({fieldName: 'category', comparisonType: ComparisonType.EQUALS, value: this.category})
+      if (this.subcategory != '') {
+        filters.push({fieldName: 'subcategory', comparisonType: ComparisonType.EQUALS, value: this.subcategory})
+      }
+    }  else if(this.search != null) {
+      filters.push({fieldName: 'title', comparisonType: ComparisonType.CONTAINS, value: this.search})
     }
     if(this.priceFilters != []) {
       this.priceFilters.forEach(filter => {

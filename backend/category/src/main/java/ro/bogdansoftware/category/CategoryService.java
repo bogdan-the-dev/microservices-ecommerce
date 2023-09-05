@@ -1,5 +1,6 @@
 package ro.bogdansoftware.category;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ro.bogdansoftware.category.dto.CreateCategoryRequestDTO;
@@ -7,6 +8,7 @@ import ro.bogdansoftware.category.dto.UpdateCategoryRequestDTO;
 import ro.bogdansoftware.category.dto.UpdateSubcategoryDTO;
 import ro.bogdansoftware.category.model.Category;
 import ro.bogdansoftware.category.model.Subcategory;
+import ro.bogdansoftware.clients.product.IProductClient;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,13 +18,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository repository;
-
-    public CategoryService(CategoryRepository repository) {
-        this.repository = repository;
-    }
+    private final IProductClient productClient;
 
     public List<Category> getAllCategories() {
         return this.repository.findAll();
@@ -33,7 +33,12 @@ public class CategoryService {
     }
 
     public void deleteCategory(String categoryId) {
-        this.repository.deleteById(categoryId);
+        Category c = repository.findById(categoryId).orElseThrow();
+        if(!Objects.equals(c.getName(), "Uncategorized")) {
+
+            this.repository.deleteById(categoryId);
+        }
+
 
         //TODO move all the products from that category to uncategorized
 

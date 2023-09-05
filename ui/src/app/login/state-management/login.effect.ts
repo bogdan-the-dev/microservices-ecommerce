@@ -37,9 +37,9 @@ export class LoginEffect {
         .pipe(
           switchMap(result => {
             return of(
-              {type: LoginAction.RECOVER_STATE_FINISHED, payload: {data: result}})
+              {type: LoginAction.RECOVER_STATE_FINISHED, payload: {data: result}},
               //{type: CartAction.SAVE_ONLINE, payload: true},
-              //{type: CartAction.GET_CART, payload: true})
+              {type: CartAction.GET_CART, payload: true})
           }),
           catchError(error => {
             return of({type: LoginAction.LOGIN_ERROR, payload: {success: false, data: error}})

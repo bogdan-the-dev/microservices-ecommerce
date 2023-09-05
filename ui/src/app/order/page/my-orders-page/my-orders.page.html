@@ -1,0 +1,5 @@
+<div class="order-list">
+  <div *ngFor="let order of myOrders" class="order-summary">
+    <app-my-order-component  [order]="order" ></app-my-order-component>
+  </div>
+</div>

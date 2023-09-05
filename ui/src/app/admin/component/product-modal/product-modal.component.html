@@ -132,7 +132,6 @@
     </div>
     <div>
       <mat-checkbox formControlName="outOfStock"  *ngIf="!editMode" (change)="onOutOfStockChange($event)">Out of Stock</mat-checkbox>
-      <mat-checkbox formControlName="isEnabled" *ngIf="editMode">Enable</mat-checkbox>
       <div *ngIf="!editMode">
         <mat-form-field appearance="fill">
           <mat-label>Initial Quantity</mat-label>

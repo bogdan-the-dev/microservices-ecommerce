@@ -54,6 +54,5 @@ export class NavbarComponent implements OnInit {
 
   onNavigate(val: [category: string, subcategory: string]) {
     this.router.navigate(['products', val[0], val[1]])
-    console.log(val)
   }
 }
