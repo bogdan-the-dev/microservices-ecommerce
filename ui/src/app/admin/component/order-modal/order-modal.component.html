@@ -1,0 +1,28 @@
+<div class="popup-container">
+
+  <div style="height: 40px">
+    <h3>Update Order</h3>
+    <button class="close-button" matTooltip="Cancel" (click)="closeDialog()"><mat-icon>close</mat-icon></button>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status" (selectionChange)="onStatusChange($event)">
+          <mat-option *ngFor="let key of orderStatusKeys" [value]="key">
+            {{ key }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.controls['status'].invalid">Status is required</mat-error>
+
+      </mat-form-field>
+    </div>
+      <div>
+        <mat-form-field class="full-width">
+          <mat-label>Tracking number</mat-label>
+          <input matInput type="text" formControlName="trackingNumber" [disabled]="!needTracking" >
+          <mat-error *ngIf="form.controls['trackingNumber']?.invalid" >Tracking number is required</mat-error>
+        </mat-form-field>
+      </div>
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
+  </form>
+</div>

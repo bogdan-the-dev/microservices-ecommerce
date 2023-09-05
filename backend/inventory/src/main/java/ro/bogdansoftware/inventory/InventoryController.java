@@ -32,6 +32,12 @@ public class InventoryController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("return-inventory")
+    ResponseEntity<Void> returnInventory(@RequestParam("id") String id, @RequestParam("qty") int quantity) {
+        inventoryService.returnInventory(id, quantity);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("create-inventory")
     public ResponseEntity<Void> createInventory(@RequestBody InventoryDTO inventoryDTO) {
         inventoryService.createInventory(inventoryDTO);

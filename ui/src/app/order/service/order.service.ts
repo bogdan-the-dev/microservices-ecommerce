@@ -5,6 +5,7 @@ import {OrderApiUrls} from "./order.api-urls";
 import {CreateOrderModel} from "../model/create-order.model";
 import {Injectable} from "@angular/core";
 import {MyOrderModel} from "../model/my-order.model";
+import {EditOrderModel} from "../model/edit-order.model";
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,14 @@ export class OrderService {
 
   getHasBoughtItem(itemId: string) {
     return this.http.get<boolean>(OrderApiUrls.hasBought + '?itemId='+itemId)
+  }
+
+  cancelOrder(orderId) {
+    return this.http.put(OrderApiUrls.cancel, orderId)
+  }
+
+  editOrder(data: EditOrderModel) {
+    return this.http.put(OrderApiUrls.edit, data)
   }
 
 }

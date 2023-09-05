@@ -17,4 +17,7 @@ public interface IInventoryClient {
 
     @PutMapping("order-modify-inventory")
     ResponseEntity<Boolean> orderModifyInventory(@RequestBody ListOfInventoryItemsDTO requestDTO);
+
+    @PutMapping("return-inventory")
+    ResponseEntity<Void> returnInventory(@RequestParam("id") String id, @RequestParam("qty") int quantity);
 }

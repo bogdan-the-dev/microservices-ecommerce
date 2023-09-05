@@ -5,5 +5,7 @@ export enum OrderStatus {
   PREPARATION,
   READY_FOR_SHIPPING,
   SHIPPED,
-  RECEIVED
+  RECEIVED,
+  CANCELED
+
 }

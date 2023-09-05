@@ -107,6 +107,11 @@ public class InventoryService {
         redisTemplate.opsForHash().delete("Inventory", id);
     }
 
+    public void returnInventory(String itemId, int quantity) {
+        int actual = (int) redisTemplate.opsForHash().get("Inventory", itemId);
+        modifyInventory(itemId, actual+quantity);
+    }
+
     public List<InventoryItemDTO> getAllInventory() {
         Set<Object> ids = redisTemplate.opsForHash().keys("Inventory");
         List<InventoryItemDTO> items = new ArrayList<>();

@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ro.bogdansoftware.order.model.CheckoutPayment;
-import ro.bogdansoftware.order.model.MyOrderDTO;
-import ro.bogdansoftware.order.model.PlaceOrderDTO;
-import ro.bogdansoftware.order.model.PlaceOrderResponseDTO;
+import ro.bogdansoftware.order.model.*;
 import ro.bogdansoftware.shared.security.VerifyRole;
 
 import java.net.URI;
@@ -25,12 +22,6 @@ public class OrderController {
     @PostMapping("/place")
     public ResponseEntity<PlaceOrderResponseDTO> placeOrder(@RequestBody PlaceOrderDTO orderDTO) {
         return ResponseEntity.ok(this.orderService.placeOrder(orderDTO));
-    }
-
-    @PutMapping("/cancel")
-    public ResponseEntity<Void> cancel(@RequestParam String orderId) {
-
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/pay")
@@ -51,10 +42,21 @@ public class OrderController {
         return ResponseEntity.ok(orderService.hasUserBoughtItem(username, itemId));
     }
 
+    @PutMapping("/edit")
+    public ResponseEntity<Void> edit(@RequestBody UpdateOrderDTO dto) {
+        this.orderService.edit(dto);
+        return ResponseEntity.ok().build();
+        }
 
     @GetMapping("/get-all")
     public ResponseEntity<List<MyOrderDTO>> getAll() {
         return ResponseEntity.ok(orderService.getAll());
+    }
+
+    @PutMapping("/cancel")
+    public ResponseEntity<Void> cancelOrder(@RequestBody Long orderId) {
+        orderService.cancel(orderId);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/test")

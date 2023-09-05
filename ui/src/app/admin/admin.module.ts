@@ -34,6 +34,7 @@ import {OrderManagementPage} from "./page/order-management-page/order-management
 import {RevenuesPage} from "./page/revenues/revenues.page";
 import {CreateAdminModalComponent} from "./component/create-admin-account-modal/create-admin-modal.component";
 import {EditInventoryModalComponent} from "./component/edit-Inventory-modal/edit-Inventory-modal.component";
+import {OrderModalComponent} from "./component/order-modal/order-modal.component";
 
 
 
@@ -53,7 +54,8 @@ import {EditInventoryModalComponent} from "./component/edit-Inventory-modal/edit
     OrderManagementPage,
     RevenuesPage,
     CreateAdminModalComponent,
-    EditInventoryModalComponent
+    EditInventoryModalComponent,
+    OrderModalComponent
   ],
   imports: [
     CommonModule,

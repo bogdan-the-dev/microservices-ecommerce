@@ -5,6 +5,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {OrderService} from "../../../order/service/order.service";
 import {Sort} from "@angular/material/sort";
 import {OrderStatus} from "../../../order/model/order-status";
+import {EditInventoryModalComponent} from "../../component/edit-Inventory-modal/edit-Inventory-modal.component";
+import {OrderModalComponent} from "../../component/order-modal/order-modal.component";
 
 @Component({
   selector: 'app-order-management.page',
@@ -46,12 +48,23 @@ export class OrderManagementPage implements OnInit{
     this.selection.clear()
   }
 
-  onEdit() {
+  canEdit() {
+     return this.selection.selected[0]?.status !== OrderStatus.RECEIVED && this.selection.selected[0]?.status !== OrderStatus.CANCELED
+  }
 
+  onEdit() {
+    const dialogRef = this.dialog.open(OrderModalComponent, {
+      width: '400px',
+      data: {
+        id: this.selection.selected[0].id,
+        status: this.selection.selected[0].status,
+        tracking: this.selection.selected[0].trackingNumber,
+      }
+    })
   }
 
   onCancel() {
-
+    this.service.cancelOrder(this.selection.selected[0].id).subscribe()
   }
 
   sortData(sort: Sort) {

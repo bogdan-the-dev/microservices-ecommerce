@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface IOrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     List<OrderItem> findOrderItemsByItemIdIsAndOrderUsernameIs(String itemId, String username);
+
+    List<OrderItem> findOrderItemsByOrderIdIs(long orderId);
 }

@@ -64,6 +64,13 @@ public class OrderService {
         return responseData;
     }
 
+    public void edit(UpdateOrderDTO dto) {
+        var order = this.orderRepository.findById(dto.getOrderId()).get();
+        order.setStatus(dto.getStatus());
+        order.setTrackingNumber(dto.getTrackingNumber());
+        orderRepository.saveAndFlush(order);
+    }
+
     public boolean hasUserBoughtItem(String username, String productId) {
         return orderItemRepository.findOrderItemsByItemIdIsAndOrderUsernameIs(productId, username).size()>0;
     }
@@ -74,6 +81,18 @@ public class OrderService {
 
     public List<MyOrderDTO> getAll() {
         return orderRepository.findAll().stream().map(MyOrderDTO::convert).collect(Collectors.toList());
+    }
+
+    public void cancel(long orderId) {
+        Order o = orderRepository.findById(orderId).get();
+        o.setStatus(OrderStatus.CANCELED);
+        List<OrderItem> items = orderItemRepository.findOrderItemsByOrderIdIs(orderId);
+
+        for(OrderItem item: items) {
+            inventoryClient.returnInventory(item.getItemId(), item.getQuantity());
+        }
+
+        orderRepository.saveAndFlush(o);
     }
 
     public PlaceOrderResponseDTO placeOrder(PlaceOrderDTO orderDTO) {

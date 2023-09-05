@@ -8,7 +8,7 @@ export class OrderApiUrls {
   static getAll = OrderApiUrls.baseOrderUrl + '/get-all'
   static getForUser = OrderApiUrls.baseOrderUrl + '/get-for-user'
   static seeOrder = OrderApiUrls.baseOrderUrl + '/get'
-  static changeStatus = OrderApiUrls.baseOrderUrl + '/edit'
+  static edit = OrderApiUrls.baseOrderUrl + '/edit'
   static getOrdersInRange = OrderApiUrls.baseOrderUrl + '/get-in-range'
   static hasBought = OrderApiUrls.baseOrderUrl + '/has-user-bought-item'
 }

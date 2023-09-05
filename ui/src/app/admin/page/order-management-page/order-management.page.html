@@ -2,10 +2,10 @@
 
 <section class="button-section">
   <div class="button-group">
-    <button mat-icon-button color="primary" aria-label="Edit Order" [disabled]="selection.selected.length != 1" matTooltip="Edit inventory" (click)="onEdit()">
+    <button mat-icon-button color="primary" aria-label="Edit Order" [disabled]="selection.selected.length != 1 && canEdit()" matTooltip="Edit Order" (click)="onEdit()">
       <mat-icon>edit</mat-icon>
     </button>
-    <button mat-icon-button color="primary" matTooltip="Cancel" aria-label="Cancel" (click)="onCancel()">
+    <button mat-icon-button color="primary" matTooltip="Cancel" [disabled]="selection.selected.length != 1 && canEdit()" aria-label="Cancel" (click)="onCancel()">
       <mat-icon>cancel</mat-icon>
     </button>
     <button mat-icon-button color="primary" matTooltip="Refresh" aria-label="Refresh" (click)="onRefresh()">
@@ -15,7 +15,7 @@
   <div class="search-field">
     <mat-form-field>
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput type="text" [(ngModel)]="searchKeyword" (input)="applyFilter()" placeholder="Search by username" />
+      <input matInput type="text" [(ngModel)]="searchKeyword" (input)="applyFilter()" placeholder="Search order id" />
     </mat-form-field>
   </div>
 </section>
