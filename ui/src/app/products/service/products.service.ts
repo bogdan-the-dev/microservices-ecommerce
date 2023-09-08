@@ -23,7 +23,7 @@ export class ProductsService {
   }
 
   getProductForCart(ids: string[]) {
-    return this.http.put(ProductApiUrls.getProductForCart, {ids: ids})
+    return this.http.put(ProductApiUrls.getProductForCart, ids)
   }
 
   getProductsForTable() {

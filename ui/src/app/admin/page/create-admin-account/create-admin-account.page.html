@@ -2,16 +2,16 @@
 
 <section class="button-section">
   <div class="button-group">
-    <button mat-icon-button color="primary" aria-label="Add account" matTooltip="Add product" (click)="onCreate()">
+    <button mat-icon-button color="primary" aria-label="Add account" matTooltip="Add admin" (click)="onCreate()">
       <mat-icon>add</mat-icon>
     </button>
-    <button mat-icon-button color="primary" matTooltip="Enable" [disabled]="selection.selected.length < 1" (click)="onEnable()">
+    <button mat-icon-button color="primary" matTooltip="Enable" [disabled]="isDisabled()" (click)="onEnable()">
       <mat-icon>check_circle</mat-icon>
     </button>
-    <button mat-icon-button color="primary" matTooltip="Disable" [disabled]="selection.selected.length < 1" (click)="onDisable()">
+    <button mat-icon-button color="primary" matTooltip="Disable" [disabled]="isDisabled()" (click)="onDisable()">
       <mat-icon>cancel</mat-icon>
     </button>
-    <button mat-icon-button color="primary" aria-label="Delete account" matTooltip="Delete product" [disabled]="!selection.hasValue()" (click)="onDelete()">
+    <button mat-icon-button color="primary" aria-label="Delete account" matTooltip="Delete admin" [disabled]="isDisabled()" (click)="onDelete()">
       <mat-icon>delete</mat-icon>
     </button>
     <button mat-icon-button color="primary" matTooltip="Refresh" aria-label="Refresh" (click)="onRefresh()">
@@ -45,7 +45,7 @@
     </ng-container>
 
     <ng-container matColumnDef="username">
-      <th mat-header-cell *matHeaderCellDef > Username </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="username" > Username </th>
       <td mat-cell *matCellDef="let element">{{element.username}}</td>
     </ng-container>
     <ng-container matColumnDef="email">

@@ -1,6 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {CategoryService} from "../../../admin/service/category.service";
 import {Router} from "@angular/router";
+import {select, Store} from "@ngrx/store";
+import {filter} from "rxjs";
 
 @Component({
   selector: 'app-navbar',
@@ -13,21 +15,30 @@ export class NavbarComponent implements OnInit {
 
   showSubcategoriesDropdown = false;
 
+  userRole
 
   categories
 
   activeCategory: any = null;
   activeCategoryIndex: number = -1;
 
-  constructor(private categoryService: CategoryService, private router: Router) {
+  constructor(private categoryService: CategoryService, private router: Router, private store: Store<any>) {
   }
 
   ngOnInit() {
-    this.categoryService.getCategories().subscribe(res => {
-      this.categories = res
+    this.onLoad()
+
+    this.store.pipe(
+      select(s => s.loginModuleFeature.loginState.role),
+      filter(s => s !== undefined)
+    ).subscribe(role => {
+      this.userRole = role
     })
   }
 
+  isAdmin() : boolean {
+    return this.userRole == "ADMIN"
+  }
 
   showCategories(): void {
     this.showCategoriesDropdown = true;
@@ -50,6 +61,12 @@ export class NavbarComponent implements OnInit {
 
   isActiveCategory(category: any): boolean {
     return this.activeCategoryIndex !== -1 && category.id === this.categories[this.activeCategoryIndex].id;
+  }
+
+  onLoad() {
+    this.categoryService.getCategories().subscribe(res => {
+      this.categories = res
+    })
   }
 
   onNavigate(val: [category: string, subcategory: string]) {

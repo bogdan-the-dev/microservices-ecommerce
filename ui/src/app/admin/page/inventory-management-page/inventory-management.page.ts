@@ -42,7 +42,7 @@ export class InventoryManagementPage implements OnInit{
   }
   onEdit() {
     const dialogRef = this.dialog.open(EditInventoryModalComponent, {
-      width: '600px',
+      width: '400px',
       data: {
         productName: this.selection.selected[0].productName,
         productId: this.selection.selected[0].productId,

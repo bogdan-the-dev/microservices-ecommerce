@@ -3,9 +3,11 @@ package ro.bogdansoftware.product;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ro.bogdansoftware.clients.product.ChangeProductsCategoryDTO;
 import ro.bogdansoftware.clients.product.ProductForCartDTO;
 import ro.bogdansoftware.product.dto.*;
 import ro.bogdansoftware.product.model.ProductFilter;
+import ro.bogdansoftware.shared.security.VerifyRole;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -88,6 +90,7 @@ public class ProductController {
     }
 
     @PostMapping("create")
+    @VerifyRole("ADMIN")
     public ResponseEntity<Void> createProduct(@RequestBody CreateProductDTO createProductDTO) {
         productService.createProduct(createProductDTO);
         return ResponseEntity.ok().build();
@@ -98,12 +101,14 @@ public class ProductController {
         return ResponseEntity.ok(res);
     }
     @PutMapping("edit")
+    @VerifyRole("ADMIN")
     public ResponseEntity<Void> editProduct(@RequestBody ViewEditProductDTO dto) {
         productService.editProduct(dto);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("delete")
+    @VerifyRole("ADMIN")
     public ResponseEntity<Void> deleteProduct(@RequestBody List<String> ids) {
         productService.deleteProduct(ids);
         return ResponseEntity.ok().build();
@@ -130,6 +135,12 @@ public class ProductController {
     @PutMapping("remove-promotion")
     public ResponseEntity<Void> removePromotions(@RequestBody String id) {
         productService.removePromotion(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("category-deleted")
+    public ResponseEntity<Void> categoryDeleted(@RequestParam(name = "category") String category, @RequestParam (name = "subcategory") String subcategory) {
+        productService.categoryDeleted(category, subcategory);
         return ResponseEntity.ok().build();
     }
 }

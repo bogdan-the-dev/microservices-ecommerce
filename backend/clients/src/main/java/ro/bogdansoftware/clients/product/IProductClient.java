@@ -33,4 +33,10 @@ public interface IProductClient {
 
     @PutMapping("get-product-cart")
     ResponseEntity<List<ProductForCartDTO>> getProductForCart(@RequestBody List<String> ids);
+
+    @PutMapping("change-category")
+    ResponseEntity<Void> changeCategory(@RequestBody ChangeProductsCategoryDTO dto);
+
+    @PutMapping("category-deleted")
+    ResponseEntity<Void> categoryDeleted(@RequestParam(name = "category") String category, @RequestParam (name = "subcategory") String subcategory);
 }

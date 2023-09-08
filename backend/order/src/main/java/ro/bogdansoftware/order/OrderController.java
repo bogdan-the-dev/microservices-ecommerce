@@ -43,6 +43,7 @@ public class OrderController {
     }
 
     @PutMapping("/edit")
+    @VerifyRole("ADMIN")
     public ResponseEntity<Void> edit(@RequestBody UpdateOrderDTO dto) {
         this.orderService.edit(dto);
         return ResponseEntity.ok().build();
@@ -54,6 +55,7 @@ public class OrderController {
     }
 
     @PutMapping("/cancel")
+    @VerifyRole("ADMIN")
     public ResponseEntity<Void> cancelOrder(@RequestBody Long orderId) {
         orderService.cancel(orderId);
         return ResponseEntity.ok().build();

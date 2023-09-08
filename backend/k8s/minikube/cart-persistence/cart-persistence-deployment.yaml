@@ -30,6 +30,7 @@ spec:
               value: docker
           image: bogdantamba/cart-persistence:latest
           name: cart-persistence
+          imagePullPolicy: Always
           ports:
             - containerPort: 8256
           resources: {}

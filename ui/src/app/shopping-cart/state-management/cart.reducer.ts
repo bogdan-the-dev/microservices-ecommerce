@@ -2,16 +2,17 @@ import {ItemCartModel} from "../model/item-cart.model";
 import {ActionWithPayload} from "../../shared/models/action-with-payload";
 import {CartAction} from "./cart.action";
 import {bottom} from "@popperjs/core";
+import {elementAt} from "rxjs";
 
 export interface CartState {
-  items: Array<ItemCartModel>
+  items: ItemCartModel[]
   total: number
   numberOfItems: number
   saveOnline: boolean
 }
 
 const cartState: CartState = {
-  items: new Array<ItemCartModel>(),
+  items: [],
   total: 0,
   numberOfItems: 0,
   saveOnline: false
@@ -52,14 +53,27 @@ export function CartReducer (state = cartState, action: ActionWithPayload) {
       return newState
     }
     case CartAction.GET_CART_FINISHED: {
-      const newState = {...state}
-      newState.items = action.payload
+      let newState = {...state}
+      if(newState.items.length == 0) {
+        newState.items = []
+      }
+      if(newState.saveOnline && action.payload.length > 0) {
+        newState.items = action.payload
+        newState.total = 0
+        newState.numberOfItems = 0
+      } else {
+        action.payload.forEach((elem: ItemCartModel) => {
+          newState.items.push(elem)
+        })
+      }
+
       action.payload.forEach((elem: any) => {
         newState.numberOfItems += elem.quantity
         newState.total += elem.price * elem.quantity
       })
-      return newState
+        return newState
     }
+
     case CartAction.EMPTY_CART_FINISHED: {
       const newState = {...state}
       newState.total = 0

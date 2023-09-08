@@ -101,7 +101,12 @@ export class ProductComponent extends BaseComponent implements OnInit{
   }
 
   onAddToCart() {
-    const realPrice = this.product.promotion !== undefined ? Number((this.product.price - (this.product.price * (this.product.promotion.percentage / 100))).toFixed(2)) : this.product.price
+    let realPrice
+    if(this.product.promotion == null) {
+      realPrice = this.product.price
+    } else {
+      realPrice = this.product.promotion !== undefined ? Number((this.product.price - (this.product.price * (this.product.promotion?.percentage / 100))).toFixed(2)) : this.product.price
+    }
     const item: ItemCartModel = {id: this.product.id, price: realPrice, title: this.product.title, quantity: 1, image: this.product.photos[0]}
     this.store.dispatch({type: CartAction.ADD_TO_CART, payload: item})
   }

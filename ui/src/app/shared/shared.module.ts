@@ -19,6 +19,9 @@ import {NavbarComponent} from "./component/navbar/navbar.component";
 import {ProductsModule} from "../products/products.module";
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
+import {TermsPage} from "./page/terms-page/terms.page";
+import {AboutUsPage} from "./page/about-us-page/about-us.page";
+import {HomePage} from "./page/home/home.page";
 
 
 
@@ -28,11 +31,15 @@ import {FormsModule} from "@angular/forms";
     BaseComponent,
     AccountMiniComponent,
     DropdownDirective,
-    NavbarComponent
+    NavbarComponent,
+    TermsPage,
+    AboutUsPage,
+    HomePage
   ],
   exports: [
     HeaderComponent,
-    NavbarComponent
+    NavbarComponent,
+
   ],
     imports: [
         CommonModule,

@@ -38,14 +38,19 @@ export function LoginReducer (state= loginState, action: ActionWithPayload) {
       newState.role = action.payload.data.role
       newState.success = action.payload.success
       newState.error = false;
-      localStorage.setItem('token', newState.token)
+      if(newState.role == 'USER') {
+        localStorage.setItem('token', newState.token)
+      }
       return newState
     }
     case LoginAction.LOGIN_ERROR: {
       const newState = {...state}
       newState.error = true
       newState.username = ''
-      if(action.payload.data.status == 400) {
+      if (localStorage.getItem('token') != null) {
+        localStorage.removeItem('token')
+      }
+      else if(action.payload.data.status == 400) {
         newState.errorMessage = action.payload.data.error.message
       } else {
         newState.errorMessage = 'Invalid credentials.'

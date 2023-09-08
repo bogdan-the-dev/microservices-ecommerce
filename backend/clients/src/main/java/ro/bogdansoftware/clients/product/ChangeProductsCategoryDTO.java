@@ -1,4 +1,4 @@
-package ro.bogdansoftware.product.dto;
+package ro.bogdansoftware.clients.product;
 
 import java.util.List;
 

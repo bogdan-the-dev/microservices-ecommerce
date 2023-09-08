@@ -14,6 +14,8 @@ import {OrderModel} from "../../model/order.model";
 import {CreateOrderModel} from "../../model/create-order.model";
 import {OrderItemDtoModel} from "../../model/order-item-dto.model";
 import {OrderService} from "../../service/order.service";
+import {Router} from "@angular/router";
+import {CartAction} from "../../../shopping-cart/state-management/cart.action";
 
 @Component({
   selector: 'app-checkout.page',
@@ -36,9 +38,11 @@ export class CheckoutPage extends BaseComponent{
 
   sameData: boolean
 
+  disableGoBack: boolean = false
+
   private username
 
-  constructor(private store: Store<any>, private http: HttpClient, private orderService: OrderService) {
+  constructor(private store: Store<any>, private http: HttpClient, private orderService: OrderService, private router: Router) {
     super();
   }
 
@@ -207,11 +211,21 @@ export class CheckoutPage extends BaseComponent{
       orderItemDTOList: arr
     }
     this.orderService.place(orderDTO).subscribe((res: any) => {
+      if(!res.valid) {
+        window.alert("Not enough products in inventory")
+      }
       if(orderDTO.order.paymentType == PaymentType.CARD && res.valid == true) {
         this.attemptPayment(res.orderId)
+      } else if(res.valid) {
+        this.store.dispatch({type: CartAction.EMPTY_CART, payload: {}})
       }
     })
+    this.disableGoBack = true;
 
+  }
+
+  redirectToOrders() {
+    this.router.navigate(['/','order','my-orders'])
   }
 
   protected readonly Object = Object;

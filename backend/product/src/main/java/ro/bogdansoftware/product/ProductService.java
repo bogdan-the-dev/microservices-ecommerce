@@ -13,6 +13,7 @@ import ro.bogdansoftware.clients.file.PhotoDeleteDTO;
 import ro.bogdansoftware.clients.file.PhotoUploadDTO;
 import ro.bogdansoftware.clients.inventory.IInventoryClient;
 import ro.bogdansoftware.clients.inventory.InventoryDTO;
+import ro.bogdansoftware.clients.product.ChangeProductsCategoryDTO;
 import ro.bogdansoftware.clients.product.ProductForCartDTO;
 import ro.bogdansoftware.clients.review.IReviewClient;
 import ro.bogdansoftware.clients.review.ReviewProductPreview;
@@ -200,7 +201,12 @@ public class ProductService {
         for (String id: dto.ids()) {
             Product p = productRepository.findById(id).orElseThrow();
             p.setCategory(dto.category());
-            p.setSubcategory(dto.subcategory());
+            if(dto.subcategory() == null) {
+                p.setSubcategory("");
+            } else {
+                p.setSubcategory(dto.subcategory());
+            }
+
             productRepository.save(p);
         }
     }
@@ -281,6 +287,24 @@ public class ProductService {
             names.add(productRepository.findById(id).orElseThrow().getTitle());
         }
         return names;
+    }
+
+    public void categoryDeleted(String category, String subcategory) {
+        if(category.length() == 0) {
+            var products = productRepository.findProductsBySubcategoryIs(subcategory);
+            for(Product p : products) {
+                p.setCategory("Uncategorized");
+                p.setSubcategory("");
+                productRepository.save(p);
+            }
+        } else {
+            var products = productRepository.findProductsByCategoryIs(category);
+            for(Product p : products) {
+                p.setCategory("Uncategorized");
+                p.setSubcategory("");
+                productRepository.save(p);
+            }
+        }
     }
 
     private int getProductNumber(List<ProductFilter> filters) {

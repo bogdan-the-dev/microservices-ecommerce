@@ -42,7 +42,7 @@ public class OrderService {
         Stripe.apiKey = STRIPE_KEY;
         SessionCreateParams params = SessionCreateParams.builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
-                .setMode(SessionCreateParams.Mode.PAYMENT).setSuccessUrl("http://localhost:4200/payment/success")
+                .setMode(SessionCreateParams.Mode.PAYMENT).setSuccessUrl("http://localhost:4200/order/my-orders")
                 .setCancelUrl("http://localhost:4200/payment/fail")
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
@@ -66,9 +66,22 @@ public class OrderService {
 
     public void edit(UpdateOrderDTO dto) {
         var order = this.orderRepository.findById(dto.getOrderId()).get();
+        if(order.getStatus() == OrderStatus.CANCELED) {
+            cancel(dto.getOrderId());
+            return;
+        }
         order.setStatus(dto.getStatus());
         order.setTrackingNumber(dto.getTrackingNumber());
         orderRepository.saveAndFlush(order);
+        if(order.isNotifySMS()) {
+            SendNotificationRequest requestSMS;
+            if(order.getStatus() != OrderStatus.SHIPPED) {
+                requestSMS = new SendNotificationRequest("Update order with the id " + order.getId() + ",  status changed with " + order.getStatus(), NotificationType.SMS,order.getUsername(), "Order status update", order.getPhoneNumber());
+            } else {
+                requestSMS = new SendNotificationRequest("Update order with the id " + order.getId() + ",  status changed with " + order.getStatus() + "\nTracking number: " + order.getTrackingNumber(), NotificationType.SMS,order.getUsername(), "Order status update", order.getPhoneNumber());
+            }
+            rabbitMQMessageProducer.publish(requestSMS, "internal.exchange", "internal.notification.routing-key");
+        }
     }
 
     public boolean hasUserBoughtItem(String username, String productId) {
@@ -76,7 +89,7 @@ public class OrderService {
     }
 
     public List<MyOrderDTO> getMyOrders(String username) {
-        return orderRepository.getOrdersByUsernameIs(username).stream().map(MyOrderDTO::convert).collect(Collectors.toList());
+        return orderRepository.getOrdersByUsernameIsOrderByOrderDateDesc(username).stream().map(MyOrderDTO::convert).collect(Collectors.toList());
     }
 
     public List<MyOrderDTO> getAll() {
@@ -93,6 +106,8 @@ public class OrderService {
         }
 
         orderRepository.saveAndFlush(o);
+        SendNotificationRequest requestSMS = new SendNotificationRequest("The order with the id " + o.getId() + " was cancel", NotificationType.SMS,o.getUsername(), "Order canceled", o.getPhoneNumber());
+        rabbitMQMessageProducer.publish(requestSMS, "internal.exchange", "internal.notification.routing-key");
     }
 
     public PlaceOrderResponseDTO placeOrder(PlaceOrderDTO orderDTO) {

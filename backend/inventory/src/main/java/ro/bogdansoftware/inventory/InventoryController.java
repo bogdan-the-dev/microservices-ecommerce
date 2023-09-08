@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.bogdansoftware.clients.inventory.InventoryDTO;
 import ro.bogdansoftware.clients.inventory.ListOfInventoryItemsDTO;
+import ro.bogdansoftware.shared.security.VerifyRole;
 
 import java.net.URI;
 import java.util.List;
@@ -27,6 +28,7 @@ public class InventoryController {
     }
 
     @PutMapping("modify-inventory")
+    @VerifyRole("ADMIN")
     public ResponseEntity<Void> modifyInventory(@RequestParam("id") String id, @RequestParam("qty") int quantity) {
         inventoryService.modifyInventory(id, quantity);
         return ResponseEntity.ok().build();

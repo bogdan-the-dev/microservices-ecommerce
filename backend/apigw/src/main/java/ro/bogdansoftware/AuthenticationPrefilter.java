@@ -33,7 +33,29 @@ public class AuthenticationPrefilter extends AbstractGatewayFilterFactory<Authen
             "api/v1/cart/remove-item",
             "api/v1/order/has-user-bought-item",
             "api/v1/reviews/verify-review-present",
-            "api/v1/reviews/add-review"
+            "api/v1/reviews/add-review",
+            "api/v1/category/delete-category",
+            "api/v1/category/edit-category",
+            "api/v1/category/add-category",
+            "api/v1/inventory/modify-inventory",
+            "api/v1/order/pay",
+            "api/v1/order/place",
+            "api/v1/order/cancel",
+            "api/v1/order/edit",
+            "api/v1/order/get-for-user",
+            "api/v1/products/create",
+            "api/v1/products/edit",
+            "api/v1/products/delete",
+            "api/v1/promotion/create",
+            "api/v1/promotion/enable",
+            "api/v1/promotion/disable",
+            "api/v1/promotion/edit",
+            "api/v1/promotion/delete"
+
+
+
+
+
     );
 
 
@@ -50,7 +72,7 @@ public class AuthenticationPrefilter extends AbstractGatewayFilterFactory<Authen
                         .retrieve().bodyToMono(InternalAuthResponse.class).block();
 
                 if(result == null) {
-                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN);
                 }
 
                 ServerWebExchange modifiedExchange = exchange.mutate().request(builder -> {

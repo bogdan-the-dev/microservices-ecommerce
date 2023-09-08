@@ -75,6 +75,33 @@ services:
     networks:
       - spring
 
+  order:
+    image: bogdantamba/order:latest
+    container_name: order
+    depends_on:
+      - order-database
+      - apigw
+    networks:
+      - spring
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8301:8301"
+
+  order-database:
+    image: postgres:15.0-alpine
+    container_name: order-database
+    environment:
+      - POSTGRES_USER=bogdan
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=Order
+    ports:
+      - "5433:5432"
+    volumes:
+      - order-db-data:/data/order/db
+    networks:
+      - spring
+
   review:
     image: bogdantamba/review:latest
     container_name: review

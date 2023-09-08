@@ -10,6 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients(
         basePackages = {"ro.bogdansoftware.clients.inventory", "ro.bogdansoftware.clients.review", "ro.bogdansoftware.clients.file"}
 )
+
 public class ProductApplication {
 
     public static void main(String[] args) {

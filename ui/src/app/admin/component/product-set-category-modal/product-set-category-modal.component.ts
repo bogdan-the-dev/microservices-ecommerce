@@ -56,7 +56,7 @@ export class ProductSetCategoryModalComponent implements OnInit {
   }
 
   onSubmit() {
-    this.productService.changeCategory(this.ids, this.form.get('category').value.name, this.form.get('subcategory').value).subscribe(_ => {
+    this.productService.changeCategory(this.ids, this.form.get('category').value.name, this.form.get('subcategory').value.name).subscribe(_ => {
       this.closeDialog()
     })
   }

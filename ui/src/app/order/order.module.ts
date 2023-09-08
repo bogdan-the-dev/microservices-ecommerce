@@ -11,6 +11,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
 import {MyOrdersPage} from "./page/my-orders-page/my-orders.page";
 import {MyOrderComponent} from "./component/my-order-component/my-order.component";
+import {PaymentFailComponent} from "./component/payment-fail/payment-fail.component";
 
 
 
@@ -18,7 +19,8 @@ import {MyOrderComponent} from "./component/my-order-component/my-order.componen
   declarations: [
     CheckoutPage,
     MyOrdersPage,
-    MyOrderComponent
+    MyOrderComponent,
+    PaymentFailComponent
   ],
   imports: [
     CommonModule,

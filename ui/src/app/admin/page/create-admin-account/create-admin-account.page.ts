@@ -29,10 +29,14 @@ export class CreateAdminAccountPage {
 
   onCreate() {
     const dialogRef = this.dialog.open(CreateAdminModalComponent, {
-      width: '600px',
+      width: '400px',
       data: {
       }
     })
+  }
+
+  isDisabled() {
+    return this.selection.selected.length != 1 || this.selection.selected[0].username=="admin"
   }
 
   isAllSelected() {

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: angular-app
+  template:
+    metadata:
+      labels:
+        app: angular-app
+        force-restart: "true"
+    spec:
+      containers:
+        - name: angular-app-container
+          imagePullPolicy: Always
+          image: bogdantamba/angular-ui:latest
+          ports:
+            - containerPort: 4200

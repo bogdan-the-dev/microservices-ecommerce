@@ -9,19 +9,19 @@ import {CreateAdminAccountPage} from "./page/create-admin-account/create-admin-a
 import {InventoryManagementPage} from "./page/inventory-management-page/inventory-management.page";
 import {OrderManagementPage} from "./page/order-management-page/order-management.page";
 import {RevenuesPage} from "./page/revenues/revenues.page";
+import {AuthAdminGuard} from "../shared/guard/auth-admin.guard";
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       {path: 'admin', component: AdminManagementPage, children: [
-          {path: 'promotions', component: PromotionPage},
-          {path: 'categories', component: CategoryPage},
-          {path: 'products', component: ProductManagementPage},
-          {path: 'create-admin', component: CreateAdminAccountPage},
-          {path: 'inventory', component: InventoryManagementPage},
-          {path: 'order-management', component: OrderManagementPage},
-          {path: 'revenues', component: RevenuesPage}
-        ]}
+          {path: 'promotions', component: PromotionPage, canActivate: [AuthAdminGuard]},
+          {path: 'categories', component: CategoryPage, canActivate: [AuthAdminGuard]},
+          {path: 'products', component: ProductManagementPage, canActivate: [AuthAdminGuard]},
+          {path: 'create-admin', component: CreateAdminAccountPage, canActivate: [AuthAdminGuard]},
+          {path: 'inventory', component: InventoryManagementPage, canActivate: [AuthAdminGuard]},
+          {path: 'order-management', component: OrderManagementPage, canActivate: [AuthAdminGuard]},
+        ], canActivate: [AuthAdminGuard]}
     ])
   ],
   exports: [

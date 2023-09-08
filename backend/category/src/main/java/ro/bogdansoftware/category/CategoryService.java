@@ -35,8 +35,8 @@ public class CategoryService {
     public void deleteCategory(String categoryId) {
         Category c = repository.findById(categoryId).orElseThrow();
         if(!Objects.equals(c.getName(), "Uncategorized")) {
-
             this.repository.deleteById(categoryId);
+            productClient.categoryDeleted(c.getName(), "");
         }
 
 
@@ -63,7 +63,7 @@ public class CategoryService {
         for(UpdateSubcategoryDTO s : requestDTO.subcategories()) {
             Optional<Subcategory> optionalSubcategory = category.getSubcategories().stream().filter(elem -> Objects.equals(elem.getId(), s.id())).findFirst();
             if(optionalSubcategory.isPresent()) {
-
+                productClient.categoryDeleted("", optionalSubcategory.get().getName());
                 //todo send request to change the subcategory name on the products
 
                 optionalSubcategory.get().setName(s.name());

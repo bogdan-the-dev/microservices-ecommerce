@@ -6,5 +6,5 @@ import ro.bogdansoftware.order.model.Order;
 import java.util.List;
 
 public interface IOrderRepository extends JpaRepository<Order, Long> {
-    List<Order> getOrdersByUsernameIs(String username);
+    List<Order> getOrdersByUsernameIsOrderByOrderDateDesc(String username);
 }

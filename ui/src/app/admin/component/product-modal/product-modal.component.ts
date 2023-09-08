@@ -209,6 +209,9 @@ export class ProductModalComponent implements OnInit{
       product.isEnabled = false
     }
     product.specifications =  Serializer.serialize(this.parseSpecifications())
+    if(product.subcategory == undefined) {
+      product.subcategory = ''
+    }
     if (!this.editMode) {
       this.productService.addProduct(product).subscribe(_ => {
         this.closeDialog()

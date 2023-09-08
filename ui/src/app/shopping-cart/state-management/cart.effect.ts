@@ -59,26 +59,29 @@ export class CartEffect {
     ofType(CartAction.GET_CART),
     map(Convert.ToPayload),
     switchMap(payload => {
-      return this.service.getCart().pipe(
-        switchMap(res => {
-          return of({type: CartAction.GET_CART_FINISHED, payload: res})
-        }))
+      if (payload) {
+        return this.service.getCart().pipe(
+          switchMap(res => {
+            return of({type: CartAction.GET_CART_FINISHED, payload: res})
+          }))
+      } else {
+        const data = this.service.getCartLocally()
+        let ids = data.map(elem => elem.itemId)
+        let qty = data.map(elem => elem.quantity)
+        return this.productService.getProductForCart(ids)
+          .pipe(
+            switchMap((products: { itemId: string, title: string, image: string, price: number }[]) => {
+              const cartProduct: ItemCartModel[] = []
+              for (let i = 0; i < products.length; i++) {
+                cartProduct.push({...products[i], quantity: qty[i], id: products[i].itemId})
+              }
+              return of({type: CartAction.GET_CART_FINISHED, payload: cartProduct})
+            })
+          )
+      }
     }))
-      // else {
-      //   const data = this.service.getCartLocally()
-      //   ids = data.map(elem => elem.itemId)
-      //   qty = data.map(elem => elem.quantity)
-      //   return this.productService.getProductForCart(ids)
-      //     .pipe(
-      //       switchMap((products: {itemId: string, title: string, image: string, price: number}[]) => {
-      //         const cartProduct: ItemCartModel[] = []
-      //         for(let i = 0; i < products.length; i++) {
-      //           cartProduct.push({...products[i], quantity: qty[i], id: products[i].itemId})
-      //         }
-      //         return of({type: CartAction.GET_CART_FINISHED, payload: cartProduct})
-      //       })
-      //     )
-      // }
+
+
 
   @Effect()
   emptyCart = this.actions.pipe(
@@ -88,14 +91,14 @@ export class CartEffect {
     //@ts-ignore
     switchMap(([_, saveOnline]) => {
       if(saveOnline) {
-      //   return this.service.emptyCart()
-      //     .pipe(
-      //       switchMap(res => {
-      //         return of({type: CartAction.EMPTY_CART_FINISHED, payload: {}})
-      //       })
-      //     )
+         return this.service.emptyCart()
+           .pipe(
+             switchMap(res => {
+               return of({type: CartAction.EMPTY_CART_FINISHED, payload: {}})
+             })
+           )
        }
-      // this.service.emptyCartLocally()
+       this.service.emptyCartLocally()
       return of({type: CartAction.EMPTY_CART_FINISHED, payload: {}})
     })
   )

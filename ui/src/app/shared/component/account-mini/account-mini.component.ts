@@ -42,6 +42,7 @@ export class AccountMiniComponent extends BaseComponent{
   onLogout() {
     this.store.dispatch({type: LoginAction.LOGOUT, payload: {}})
     this.store.dispatch({type: CartAction.SAVE_ONLINE, payload: false})
+    this.router.navigate(['/'])
   }
 
 }
